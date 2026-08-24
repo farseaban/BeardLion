@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { ChevronLeft, ChevronRight, Zap, Atom, Waves } from 'lucide-react';
 
 export default function QuantumSlides() {
@@ -21,40 +21,41 @@ export default function QuantumSlides() {
     }
   }, [currentSlide, waveCollapsed]);
 
+  const resetStates = useCallback(() => {
+    setQuizAnswer(null);
+    setWaveCollapsed(false);
+    setEntangledState({ spin1: null, spin2: null });
+    setSuperpositionActive(false);
+  }, []);
+
+  const nextSlide = useCallback(() => {
+    if (currentSlide < 6) {
+      setCurrentSlide(currentSlide + 1);
+      resetStates();
+    }
+  }, [currentSlide, resetStates]);
+
+  const prevSlide = useCallback(() => {
+    if (currentSlide > 0) {
+      setCurrentSlide(currentSlide - 1);
+      resetStates();
+    }
+  }, [currentSlide, resetStates]);
+
   // 키보드 네비게이션
+  // nextSlide/prevSlide 내부에 동일한 경계 검사가 있으므로 여기서는 중복 검사하지 않는다.
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'ArrowRight' && currentSlide < 6) {
+      if (e.key === 'ArrowRight') {
         nextSlide();
       }
-      if (e.key === 'ArrowLeft' && currentSlide > 0) {
+      if (e.key === 'ArrowLeft') {
         prevSlide();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [currentSlide]);
-
-  const nextSlide = () => {
-    if (currentSlide < 6) {
-      setCurrentSlide(currentSlide + 1);
-      resetStates();
-    }
-  };
-
-  const prevSlide = () => {
-    if (currentSlide > 0) {
-      setCurrentSlide(currentSlide - 1);
-      resetStates();
-    }
-  };
-
-  const resetStates = () => {
-    setQuizAnswer(null);
-    setWaveCollapsed(false);
-    setEntangledState({ spin1: null, spin2: null });
-    setSuperpositionActive(false);
-  };
+  }, [nextSlide, prevSlide]);
 
   const slides = [
     // 슬라이드 0: 타이틀
