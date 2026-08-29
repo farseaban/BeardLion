@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Meeting {
+  id             String          @id @default(cuid())
+  slug           String          @unique // 초대 링크용 짧은 토큰 (8자 영숫자)
+  title          String          @default("당장만나")
+  windowStart    DateTime // 생성일(KST) 다음날의 UTC 자정 인코딩
+  windowEnd      DateTime // windowStart + 13일 (총 14일 창)
+  status         String          @default("collecting") // collecting | fixed
+  fixedDate      DateTime?
+  fixedBy        String? // Participant.id
+  createdAt      DateTime        @default(now())
+  participants   Participant[]
+  systemMessages SystemMessage[]
+}
+
+model Participant {
+  id             String         @id @default(cuid())
+  meetingId      String
+  name           String // 닉네임, 모임 내 유일
+  editToken      String         @unique // 본인 입력 수정용 토큰 (쿠키 저장)
+  respondedAt    DateTime? // 최초 응답(날짜 1개 이상 또는 "전부 불가" 선언) 시각
+  availabilities Availability[]
+  meeting        Meeting        @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+
+  @@unique([meetingId, name])
+}
+
+model Availability {
+  id            String      @id @default(cuid())
+  participantId String
+  date          DateTime // 날짜만 의미. KST 달력일의 UTC 자정 정규화
+  participant   Participant @relation(fields: [participantId], references: [id], onDelete: Cascade)
+
+  @@unique([participantId, date])
+}
+
+// 확정 취소 등 전원에게 보일 시스템 라인 (§5-5)
+model SystemMessage {
+  id        String   @id @default(cuid())
+  meetingId String
+  body      String
+  createdAt DateTime @default(now())
+  meeting   Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+}
