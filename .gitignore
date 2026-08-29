@@ -12,6 +12,15 @@ dist
 dist-ssr
 *.local
 
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Prisma (SQLite dev database; .env is committed on purpose — no secrets)
+prisma/*.db
+prisma/*.db-journal
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
