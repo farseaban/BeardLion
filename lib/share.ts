@@ -1,5 +1,5 @@
 // 공유 문안 빌더 (사양 §5-6). 서버는 발송하지 않는다 — 클라이언트에서 Web Share/클립보드로만 사용.
-import { formatKo } from './dates'
+import { formatKo } from './dates.ts'
 
 // "8/8(토) 나·지수는 가능! 현우만 되면 확정이야 → {링크}"
 export function buildNudge(params: {

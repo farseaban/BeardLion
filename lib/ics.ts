@@ -1,5 +1,5 @@
 // 종일 일정 .ics 생성 (사양 §5-5 확정 배너의 캘린더 다운로드)
-import { addDaysIso } from './dates'
+import { addDaysIso } from './dates.ts'
 
 function icsDate(iso: string): string {
   return iso.replaceAll('-', '')

@@ -19,7 +19,10 @@ next-env.d.ts
 
 # Prisma (SQLite dev database; .env is committed on purpose — no secrets)
 prisma/*.db
-prisma/*.db-journal
+prisma/*.db-*
+
+# TypeScript
+*.tsbuildinfo
 
 # Editor directories and files
 .vscode/*

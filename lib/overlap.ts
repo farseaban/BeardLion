@@ -1,5 +1,5 @@
 // 겹침 랭킹 계산 (사양 §6) — 순수 함수, DB·시계 의존 없음.
-import { windowDates } from './dates'
+import { windowDates } from './dates.ts'
 
 export interface RankingParticipant {
   id: string
