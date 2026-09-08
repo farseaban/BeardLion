@@ -2,7 +2,8 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main, master]
+    # 이 저장소의 기본 브랜치. main으로 바꾸면 아래 목록도 고칩니다.
+    branches: [main, master, claude/quantum-slides-component-01U3vzEaGA5k7CqHobTb9whP]
   workflow_dispatch:
 
 permissions:
