@@ -1,21 +1,28 @@
-import { Home as HomeIcon, CalendarDays, MapPin, Map, CheckCircle2 } from 'lucide-react';
+import { Home as HomeIcon, CalendarDays, Map, BookOpen, CheckCircle2 } from 'lucide-react';
 import { meta, nav } from './content';
 import { useHashRoute, navigate } from './useHashRoute';
-import { Home, Schedule, DayRoute, Guide, Survey } from './pages';
+import { Home, Schedule, Course, Guide, Materials, Participate } from './pages';
 
-const icons = { home: HomeIcon, schedule: CalendarDays, day1: MapPin, day2: Map, survey: CheckCircle2 };
+const icons = {
+  home: HomeIcon,
+  schedule: CalendarDays,
+  course: Map,
+  materials: BookOpen,
+  participate: CheckCircle2,
+};
 
 function Screen({ page, param }) {
   switch (page) {
     case 'schedule':
       return <Schedule />;
-    case 'day1':
-    case 'day2':
-      return <DayRoute id={page} />;
+    case 'course':
+      return <Course />;
     case 'guide':
       return <Guide id={param} />;
-    case 'survey':
-      return <Survey />;
+    case 'materials':
+      return <Materials />;
+    case 'participate':
+      return <Participate />;
     default:
       return <Home />;
   }
@@ -23,8 +30,8 @@ function Screen({ page, param }) {
 
 export default function TrainingSite() {
   const { page, param } = useHashRoute();
-  // 해설 화면은 첫 날 메뉴를 켜 둡니다.
-  const active = page === 'guide' ? 'day1' : page;
+  // 장소 소개 화면은 코스 메뉴를 켜 둡니다.
+  const active = page === 'guide' ? 'course' : page;
 
   return (
     <div className="min-h-dvh bg-stone-200 text-stone-900">
