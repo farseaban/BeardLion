@@ -34,26 +34,27 @@ export default function TrainingSite() {
   const active = page === 'guide' ? 'course' : page;
 
   return (
-    <div className="min-h-dvh bg-stone-200 text-stone-900">
-      <div className="mx-auto max-w-md min-h-dvh bg-[#f3ead8] shadow-xl flex flex-col">
-        <header className="px-4 pt-4 pb-2 text-center">
-          <p className="text-xs font-semibold text-stone-500 tracking-widest">{meta.org}</p>
+    <div className="min-h-dvh bg-stone-300 text-ink">
+      <div className="mx-auto max-w-md min-h-dvh bg-paper flex flex-col">
+        <header className="px-4 pt-4 pb-3 border-b border-stone-300">
+          <p className="text-[15px] font-bold text-navy-800">{meta.org}</p>
           {page !== 'home' && (
-            <p className="text-sm font-bold text-stone-700 truncate">
+            <p className="text-[15px] text-stone-700 mt-0.5">
               {meta.year} {meta.title}
             </p>
           )}
         </header>
 
-        <main className="flex-1 px-4 pb-28 pt-2">
+        <main className="flex-1 px-4 pb-32 pt-5">
           <Screen page={page} param={param} />
         </main>
 
+        {/* 하단 메뉴. 한글 이름을 크게 보여 주고 그림은 거들기만 합니다. */}
         <nav
           aria-label="주요 메뉴"
-          className="fixed bottom-0 inset-x-0 mx-auto max-w-md bg-white/95 backdrop-blur border-t-2 border-stone-300 rounded-t-2xl shadow-[0_-4px_12px_rgba(0,0,0,0.08)]"
+          className="fixed bottom-0 inset-x-0 mx-auto max-w-md bg-white border-t-2 border-navy-800"
         >
-          <ul className="grid grid-cols-5 py-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+          <ul className="grid grid-cols-5 gap-1 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
             {nav.map((n) => {
               const Icon = icons[n.id];
               const on = active === n.id;
@@ -63,16 +64,12 @@ export default function TrainingSite() {
                     type="button"
                     onClick={() => navigate(n.id)}
                     aria-current={on ? 'page' : undefined}
-                    className="w-full flex flex-col items-center gap-1 py-1 text-[12px] font-bold"
+                    className={`w-full min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 ${
+                      on ? 'bg-navy-800 text-white' : 'text-navy-800'
+                    }`}
                   >
-                    <span
-                      className={`grid place-items-center w-11 h-11 rounded-full shadow transition ${
-                        on ? 'bg-orange-500 text-white' : 'bg-orange-200 text-orange-900'
-                      }`}
-                    >
-                      <Icon size={22} />
-                    </span>
-                    <span className={on ? 'text-orange-700' : 'text-stone-700'}>{n.label}</span>
+                    <Icon size={21} strokeWidth={on ? 2.4 : 2} aria-hidden="true" />
+                    <span className="text-[15px] font-bold whitespace-nowrap leading-none">{n.label}</span>
                   </button>
                 </li>
               );
