@@ -1,0 +1,640 @@
+diff --git a/src/training/TrainingSite.jsx b/src/training/TrainingSite.jsx
+index 691b484..29d2f7e 100644
+--- a/src/training/TrainingSite.jsx
++++ b/src/training/TrainingSite.jsx
+@@ -1,81 +1,111 @@
+-import { Home as HomeIcon, CalendarDays, Map, BookOpen, CheckCircle2 } from 'lucide-react';
+-import { meta, nav } from './content';
+-import { useHashRoute, navigate } from './useHashRoute';
++import { useEffect, useState } from 'react';
++import { meta, guides } from './content';
+ import { Home, Schedule, Course, Guide, Materials, Participate } from './pages';
+ 
+-const icons = {
+-  home: HomeIcon,
+-  schedule: CalendarDays,
+-  course: Map,
+-  materials: BookOpen,
+-  participate: CheckCircle2,
+-};
++// ── A안 : 한 장 스크롤 ────────────────────────────────────
++// 화면을 나누지 않습니다. 표지부터 참여까지 한 페이지에 세로로 잇습니다.
++// 누를 곳을 고르지 않아도 아래로 내리면 전부 나옵니다. 종이 안내장에 가깝습니다.
++// 맨 위 띠는 건너뛰기용 바로가기입니다.
+ 
+-function Screen({ page, param }) {
+-  switch (page) {
+-    case 'schedule':
+-      return <Schedule />;
+-    case 'course':
+-      return <Course />;
+-    case 'guide':
+-      return <Guide id={param} />;
+-    case 'materials':
+-      return <Materials />;
+-    case 'participate':
+-      return <Participate />;
+-    default:
+-      return <Home />;
+-  }
++const sections = [
++  { id: 'sec-home', label: '안내' },
++  { id: 'sec-schedule', label: '일정' },
++  { id: 'sec-course', label: '코스' },
++  { id: 'sec-materials', label: '자료' },
++  { id: 'sec-participate', label: '참여' },
++];
++
++function Jump() {
++  const [here, setHere] = useState('sec-home');
++
++  useEffect(() => {
++    const io = new IntersectionObserver(
++      (entries) => {
++        const seen = entries.filter((e) => e.isIntersecting).sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
++        if (seen[0]) setHere(seen[0].target.id);
++      },
++      { rootMargin: '-96px 0px -60% 0px' }
++    );
++    sections.forEach((s) => {
++      const el = document.getElementById(s.id);
++      if (el) io.observe(el);
++    });
++    return () => io.disconnect();
++  }, []);
++
++  return (
++    <nav aria-label="바로가기" className="sticky top-0 z-10 bg-paper border-b border-line">
++      <ul className="flex gap-1 px-2 py-2 overflow-x-auto">
++        {sections.map((s) => (
++          <li key={s.id}>
++            <a
++              href={`#${s.id}`}
++              aria-current={here === s.id ? 'true' : undefined}
++              className={`block min-h-[48px] leading-[48px] px-4 rounded-box text-[16px] font-bold whitespace-nowrap ${
++                here === s.id ? 'bg-accent text-onAccent' : 'text-accent'
++              }`}
++            >
++              {s.label}
++            </a>
++          </li>
++        ))}
++      </ul>
++    </nav>
++  );
+ }
+ 
+-export default function TrainingSite() {
+-  const { page, param } = useHashRoute();
+-  // 장소 소개 화면은 코스 메뉴를 켜 둡니다.
+-  const active = page === 'guide' ? 'course' : page;
++function Band({ id, children }) {
++  return (
++    <section id={id} className="scroll-mt-20 pt-8 first:pt-4">
++      {children}
++    </section>
++  );
++}
+ 
++export default function TrainingSite() {
+   return (
+-    <div className="min-h-dvh bg-stone-300 text-ink">
++    <div className="min-h-dvh bg-edge text-ink">
+       <div className="mx-auto max-w-md min-h-dvh bg-paper flex flex-col">
+-        <header className="px-4 pt-4 pb-3 border-b border-stone-300">
+-          <p className="text-[15px] font-bold text-navy-800">{meta.org}</p>
+-          {page !== 'home' && (
+-            <p className="text-[15px] text-stone-700 mt-0.5">
+-              {meta.year} {meta.title}
+-            </p>
+-          )}
++        <header className="px-4 pt-4 pb-3">
++          <p className="text-[15px] font-bold text-accent">{meta.org}</p>
+         </header>
+ 
+-        <main className="flex-1 px-4 pb-32 pt-5">
+-          <Screen page={page} param={param} />
+-        </main>
++        <Jump />
++
++        <main className="flex-1 px-4 pb-16">
++          <Band id="sec-home">
++            <Home />
++          </Band>
++
++          <Band id="sec-schedule">
++            <Schedule />
++          </Band>
+ 
+-        {/* 하단 메뉴. 한글 이름을 크게 보여 주고 그림은 거들기만 합니다. */}
+-        <nav
+-          aria-label="주요 메뉴"
+-          className="fixed bottom-0 inset-x-0 mx-auto max-w-md bg-white border-t-2 border-navy-800"
+-        >
+-          <ul className="grid grid-cols-5 gap-1 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+-            {nav.map((n) => {
+-              const Icon = icons[n.id];
+-              const on = active === n.id;
+-              return (
+-                <li key={n.id}>
+-                  <button
+-                    type="button"
+-                    onClick={() => navigate(n.id)}
+-                    aria-current={on ? 'page' : undefined}
+-                    className={`w-full min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 ${
+-                      on ? 'bg-navy-800 text-white' : 'text-navy-800'
+-                    }`}
+-                  >
+-                    <Icon size={21} strokeWidth={on ? 2.4 : 2} aria-hidden="true" />
+-                    <span className="text-[15px] font-bold whitespace-nowrap leading-none">{n.label}</span>
+-                  </button>
+-                </li>
+-              );
+-            })}
+-          </ul>
+-        </nav>
++          <Band id="sec-course">
++            <Course />
++            {/* 장소 소개도 따로 들어가지 않고 코스 아래에 이어 붙습니다. */}
++            <div className="mt-8 space-y-8">
++              {Object.keys(guides).map((id) => (
++                <Guide key={id} id={id} inline />
++              ))}
++            </div>
++          </Band>
++
++          <Band id="sec-materials">
++            <Materials />
++          </Band>
++
++          <Band id="sec-participate">
++            <Participate />
++          </Band>
++
++          <p className="mt-12 pt-6 border-t border-line text-center text-[15px] text-muted">
++            {meta.dept} {meta.contact.role} {meta.contact.name} ·{' '}
++            <a href={`tel:${meta.contact.phone}`} className="font-bold text-accent underline">
++              {meta.contact.phone}
++            </a>
++          </p>
++        </main>
+       </div>
+     </div>
+   );
+diff --git a/src/training/pages.jsx b/src/training/pages.jsx
+index df580ef..7d2cf92 100644
+--- a/src/training/pages.jsx
++++ b/src/training/pages.jsx
+@@ -1,18 +1,5 @@
+-import {
+-  ChevronRight,
+-  MapPin,
+-  Flag,
+-  Phone,
+-  FileText,
+-  ExternalLink,
+-  Coffee,
+-  ClipboardCheck,
+-  CalendarDays,
+-  Map as MapIcon,
+-  BookOpen,
+-} from 'lucide-react';
++import { ChevronRight, MapPin, Flag, Phone, FileText, ExternalLink, Coffee, ClipboardCheck } from 'lucide-react';
+ import { meta, home, schedule, course, guides, materials, participate } from './content';
+-import { navigate } from './useHashRoute';
+ import { Photo, Polaroid, PageTitle, Card, BackButton, LinkButton } from './ui';
+ 
+ // ── 첫 화면 ─────────────────────────────────────────────
+@@ -20,7 +7,7 @@ export function Home() {
+   return (
+     <div>
+       <div className="text-center">
+-        <p className="text-[17px] font-bold text-navy-800">
++        <p className="text-[17px] font-bold text-accent">
+           {meta.year} {meta.audience}
+         </p>
+         <h1 className="mt-2 text-[26px] font-bold leading-snug text-ink">{meta.title}</h1>
+@@ -30,7 +17,7 @@ export function Home() {
+         {meta.summary.map((s, i) => (
+           <li
+             key={i}
+-            className="bg-white border border-stone-300 border-l-[6px] border-l-navy-800 rounded-lg px-4 py-3 text-[16px] leading-relaxed text-ink"
++            className="bg-card border border-line border-l-[6px] border-l-accent rounded-box px-4 py-3 text-[16px] leading-relaxed text-ink"
+           >
+             {s}
+           </li>
+@@ -43,10 +30,10 @@ export function Home() {
+         ))}
+       </div>
+ 
+-      <p className="mt-8 text-center text-[16px] leading-relaxed text-stone-700">
+-        {meta.place} 현장연수 안내 페이지입니다.
++      <p className="mt-8 text-center text-[16px] leading-relaxed text-muted">
++        {meta.place} 현장연수 안내입니다.
+         <br />
+-        아래 메뉴에서 일정과 코스를 확인하세요.
++        아래로 내려가시면 일정·코스·자료·참여가 차례로 나옵니다.
+       </p>
+     </div>
+   );
+@@ -65,28 +52,28 @@ function Lines({ value }) {
+ export function Schedule() {
+   return (
+     <>
+-      <PageTitle icon={CalendarDays}>{schedule.title}</PageTitle>
++      <PageTitle>{schedule.title}</PageTitle>
+ 
+       <div className="space-y-6">
+         {schedule.days.map((day) => (
+-          <section key={day.label} className="border border-stone-300 rounded-lg overflow-hidden bg-white">
+-            <h3 className="bg-navy-800 px-4 py-3 text-[17px] font-bold text-white">{day.label}</h3>
++          <section key={day.label} className="border border-line rounded-box overflow-hidden bg-card">
++            <h3 className="bg-accent px-4 py-3 text-[17px] font-bold text-onAccent">{day.label}</h3>
+             <ul>
+               {day.rows.map((r, i) => (
+                 <li
+                   key={i}
+-                  className="grid grid-cols-[92px_1fr] gap-3 px-4 py-4 border-t border-stone-300 first:border-t-0"
++                  className="grid grid-cols-[92px_1fr] gap-3 px-4 py-4 border-t border-line first:border-t-0"
+                 >
+                   <div>
+-                    <p className="text-[15px] font-bold text-navy-800 leading-snug">{r[0]}</p>
+-                    {r[1] && <p className="text-[14px] text-stone-700">{r[1]}</p>}
++                    <p className="text-[15px] font-bold text-accent leading-snug">{r[0]}</p>
++                    {r[1] && <p className="text-[14px] text-muted">{r[1]}</p>}
+                   </div>
+                   <div>
+                     <p className="text-[17px] leading-relaxed text-ink">
+                       <Lines value={r[2]} />
+                     </p>
+                     {r[3] && (
+-                      <p className="mt-1 flex items-start gap-1 text-[15px] text-navy-700">
++                      <p className="mt-1 flex items-start gap-1 text-[15px] text-accent">
+                         <MapPin size={16} className="mt-1 shrink-0" aria-hidden="true" />
+                         {r[3]}
+                       </p>
+@@ -99,15 +86,15 @@ export function Schedule() {
+         ))}
+       </div>
+ 
+-      <p className="mt-4 text-[15px] text-stone-700">{schedule.note}</p>
++      <p className="mt-4 text-[15px] text-muted">{schedule.note}</p>
+ 
+-      <div className="mt-6 border border-stone-300 rounded-lg bg-white px-4 py-4 text-[16px]">
+-        <p className="font-bold text-navy-800">
++      <div className="mt-6 border border-line rounded-box bg-card px-4 py-4 text-[16px]">
++        <p className="font-bold text-accent">
+           {meta.dept} {meta.contact.role} {meta.contact.name}
+         </p>
+         <a
+           href={`tel:${meta.contact.phone}`}
+-          className="mt-2 inline-flex items-center gap-2 min-h-[48px] text-[18px] font-bold text-navy-800 underline"
++          className="mt-2 inline-flex items-center gap-2 min-h-[48px] text-[18px] font-bold text-accent underline"
+         >
+           <Phone size={20} aria-hidden="true" /> {meta.contact.phone}
+         </a>
+@@ -117,17 +104,19 @@ export function Schedule() {
+ }
+ 
+ // ── 코스 ─────────────────────────────────────────────────
+-function go(stop) {
+-  if (stop.type === 'guide') navigate('guide', stop.target);
+-  else if (stop.type === 'page') navigate(stop.target);
++// 한 장 스크롤이므로 화면을 옮기지 않고 같은 페이지 안에서 내려갑니다.
++function anchorOf(stop) {
++  if (stop.type === 'guide') return `#guide-${stop.target}`;
++  if (stop.type === 'page') return `#sec-${stop.target}`;
++  return stop.target;
+ }
+ 
+ export function Course() {
+   return (
+     <>
+-      <PageTitle icon={MapIcon}>{course.title}</PageTitle>
++      <PageTitle>{course.title}</PageTitle>
+ 
+-      <p className="flex items-center gap-2 rounded-lg bg-navy-50 border border-navy-200 px-4 py-3 text-[16px] font-bold text-navy-900">
++      <p className="flex items-center gap-2 rounded-box bg-soft border border-line px-4 py-3 text-[16px] font-bold text-onSoft">
+         <MapPin size={19} className="shrink-0" aria-hidden="true" /> {course.start}
+       </p>
+ 
+@@ -135,38 +124,36 @@ export function Course() {
+         {course.stops.map((s) => {
+           const inner = (
+             <>
+-              <span className="grid place-items-center w-9 h-9 shrink-0 rounded-full bg-navy-800 text-white text-[16px] font-bold">
++              <span className="grid place-items-center w-9 h-9 shrink-0 rounded-full bg-accent text-onAccent text-[16px] font-bold">
+                 {s.n}
+               </span>
+-              <span className="w-20 h-16 shrink-0 overflow-hidden rounded-md border border-stone-300">
++              <span className="w-20 h-16 shrink-0 overflow-hidden rounded-box border border-line">
+                 <Photo src={s.photo} alt="" />
+               </span>
+               <span className="flex-1 text-left">
+                 <span className="block text-[18px] font-bold text-ink leading-snug">{s.label}</span>
+-                {s.time && <span className="block text-[15px] text-stone-700">{s.time}</span>}
++                {s.time && <span className="block text-[15px] text-muted">{s.time}</span>}
+               </span>
+-              <ChevronRight size={24} className="shrink-0 text-navy-700" aria-hidden="true" />
++              <ChevronRight size={24} className="shrink-0 text-accent" aria-hidden="true" />
+             </>
+           );
+           const cls =
+-            'flex items-center gap-3 w-full min-h-[80px] bg-white border border-stone-300 rounded-lg p-3 text-left';
++            'flex items-center gap-3 w-full min-h-[80px] bg-card border border-line rounded-box p-3 text-left';
+           return (
+             <li key={s.n}>
+-              {s.type === 'link' ? (
+-                <a href={s.target} target="_blank" rel="noopener noreferrer" className={cls}>
+-                  {inner}
+-                </a>
+-              ) : (
+-                <button type="button" onClick={() => go(s)} className={cls}>
+-                  {inner}
+-                </button>
+-              )}
++              <a
++                href={anchorOf(s)}
++                {...(s.type === 'link' ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
++                className={cls}
++              >
++                {inner}
++              </a>
+             </li>
+           );
+         })}
+       </ol>
+ 
+-      <p className="mt-4 flex items-center gap-2 rounded-lg bg-navy-50 border border-navy-200 px-4 py-3 text-[16px] font-bold text-navy-900">
++      <p className="mt-4 flex items-center gap-2 rounded-box bg-soft border border-line px-4 py-3 text-[16px] font-bold text-onSoft">
+         <Flag size={19} className="shrink-0" aria-hidden="true" /> {course.end}
+       </p>
+     </>
+@@ -188,7 +175,7 @@ function Bullet({ item }) {
+   );
+ }
+ 
+-export function Guide({ id }) {
++export function Guide({ id, inline = false }) {
+   const g = guides[id];
+   if (!g) {
+     return (
+@@ -202,9 +189,10 @@ export function Guide({ id }) {
+   }
+   return (
+     <>
+-      <PageTitle icon={MapPin}>{g.title}</PageTitle>
++      <div id={`guide-${id}`} className="scroll-mt-24" />
++      <PageTitle>{g.title}</PageTitle>
+       <Card>
+-        <h3 className="text-[18px] font-bold text-navy-800 mb-3">한 눈에 보기</h3>
++        <h3 className="text-[18px] font-bold text-accent mb-3">한 눈에 보기</h3>
+         <ul className="list-disc pl-5 space-y-2.5 text-[17px] leading-relaxed text-ink">
+           {g.summary.map((s, i) => (
+             <Bullet key={i} item={s} />
+@@ -212,7 +200,7 @@ export function Guide({ id }) {
+         </ul>
+ 
+         {g.quotes?.length > 0 && (
+-          <div className="my-6 border-l-4 border-navy-200 pl-4 text-[17px] leading-relaxed text-navy-900">
++          <div className="my-6 border-l-4 border-line pl-4 text-[17px] leading-relaxed text-onSoft">
+             {g.quotes.map((q, i) => (
+               <p key={i}>{q}</p>
+             ))}
+@@ -222,7 +210,7 @@ export function Guide({ id }) {
+         {g.photos?.length > 0 && (
+           <div className="grid grid-cols-2 gap-3 mt-5">
+             {g.photos.map((p, i) => (
+-              <div key={i} className="aspect-[4/3] overflow-hidden rounded-lg border border-stone-300">
++              <div key={i} className="aspect-[4/3] overflow-hidden rounded-box border border-line">
+                 <Photo src={p} alt="" />
+               </div>
+             ))}
+@@ -240,9 +228,11 @@ export function Guide({ id }) {
+         )}
+       </Card>
+ 
+-      <div className="mt-5">
+-        <BackButton to="course" label="코스로 돌아가기" />
+-      </div>
++      {!inline && (
++        <div className="mt-5">
++          <BackButton to="course" label="코스로 돌아가기" />
++        </div>
++      )}
+     </>
+   );
+ }
+@@ -251,16 +241,16 @@ export function Guide({ id }) {
+ export function Materials() {
+   return (
+     <>
+-      <PageTitle icon={BookOpen}>{materials.title}</PageTitle>
+-      <p className="mb-5 text-[16px] leading-relaxed text-stone-700">{materials.intro}</p>
++      <PageTitle>{materials.title}</PageTitle>
++      <p className="mb-5 text-[16px] leading-relaxed text-muted">{materials.intro}</p>
+       <div className="space-y-5">
+         {materials.items.map((m) => (
+           <Card key={m.id}>
+             <h3 className="flex items-start gap-2 text-[19px] font-bold leading-snug text-ink">
+-              <FileText size={22} className="shrink-0 mt-1 text-navy-800" aria-hidden="true" />
++              <FileText size={22} className="shrink-0 mt-1 text-accent" aria-hidden="true" />
+               {m.label}
+             </h3>
+-            {m.meta && <p className="mt-2 text-[15px] text-stone-700">{m.meta}</p>}
++            {m.meta && <p className="mt-2 text-[15px] text-muted">{m.meta}</p>}
+             <ul className="mt-4 list-disc pl-5 space-y-2 text-[17px] leading-relaxed text-ink">
+               {m.summary.map((s, i) => (
+                 <li key={i}>{s}</li>
+@@ -283,13 +273,13 @@ export function Participate() {
+   const { survey, coffee } = participate;
+   return (
+     <>
+-      <PageTitle icon={ClipboardCheck}>{participate.title}</PageTitle>
++      <PageTitle>{participate.title}</PageTitle>
+ 
+       <Card>
+-        <h3 className="flex items-center gap-2 text-[20px] font-bold text-navy-900">
++        <h3 className="flex items-center gap-2 text-[20px] font-bold text-onSoft">
+           <Coffee size={22} className="shrink-0" aria-hidden="true" /> {coffee.label}
+         </h3>
+-        <p className="mt-2 text-[16px] font-bold text-red-800">{coffee.when}</p>
++        <p className="mt-2 text-[16px] font-bold text-warn">{coffee.when}</p>
+         <div className="mt-3 space-y-2 text-[17px] leading-relaxed text-ink">
+           {coffee.message.map((m, i) => (
+             <p key={i}>{m}</p>
+@@ -300,7 +290,7 @@ export function Participate() {
+           {coffee.drinks.map((d) => (
+             <li
+               key={d}
+-              className="rounded-lg bg-stone-100 border border-stone-300 px-3 py-2.5 text-[15px] text-ink"
++              className="rounded-box bg-soft border border-line px-3 py-2.5 text-[15px] text-ink"
+             >
+               {d}
+             </li>
+@@ -311,12 +301,12 @@ export function Participate() {
+           <LinkButton href={coffee.url}>{coffee.buttonLabel}</LinkButton>
+         </div>
+ 
+-        <div className="mt-7 pt-5 border-t border-stone-300">
+-          <p className="text-[16px] font-bold text-navy-800 mb-3">호차별 담당 장학사</p>
++        <div className="mt-7 pt-5 border-t border-line">
++          <p className="text-[16px] font-bold text-accent mb-3">호차별 담당 장학사</p>
+           <ul className="grid grid-cols-2 gap-2">
+             {coffee.buses.map((b) => (
+-              <li key={b.bus} className="rounded-lg bg-navy-50 border border-navy-200 px-3 py-2.5 text-[16px]">
+-                <span className="font-bold text-navy-900">{b.bus}</span>
++              <li key={b.bus} className="rounded-box bg-soft border border-line px-3 py-2.5 text-[16px]">
++                <span className="font-bold text-onSoft">{b.bus}</span>
+                 <span className="ml-2 text-ink">{b.staff}</span>
+               </li>
+             ))}
+@@ -326,7 +316,7 @@ export function Participate() {
+               href={coffee.tallyUrl}
+               target="_blank"
+               rel="noopener noreferrer"
+-              className="mt-3 inline-flex items-center gap-2 min-h-[48px] text-[16px] font-bold text-navy-800 underline"
++              className="mt-3 inline-flex items-center gap-2 min-h-[48px] text-[16px] font-bold text-accent underline"
+             >
+               담당 장학사용 집계표 <ExternalLink size={17} aria-hidden="true" />
+             </a>
+@@ -335,10 +325,10 @@ export function Participate() {
+       </Card>
+ 
+       <Card className="mt-5">
+-        <h3 className="flex items-center gap-2 text-[20px] font-bold text-navy-900">
++        <h3 className="flex items-center gap-2 text-[20px] font-bold text-onSoft">
+           <ClipboardCheck size={22} className="shrink-0" aria-hidden="true" /> {survey.label}
+         </h3>
+-        <p className="mt-2 text-[16px] text-stone-700">{survey.when}</p>
++        <p className="mt-2 text-[16px] text-muted">{survey.when}</p>
+         <div className="mt-3 space-y-2 text-[17px] leading-relaxed text-ink">
+           {survey.message.map((m, i) => (
+             <p key={i} className={i === 0 ? 'font-bold' : ''}>
+diff --git a/src/training/ui.jsx b/src/training/ui.jsx
+index da4d319..44860c5 100644
+--- a/src/training/ui.jsx
++++ b/src/training/ui.jsx
+@@ -3,7 +3,6 @@ import { navigate } from './useHashRoute';
+ 
+ const base = import.meta.env.BASE_URL;
+ 
+-// 사진 자리. 파일명이 없으면 자리표시 그림을 보여 줍니다.
+ export function Photo({ src, alt = '', className = '' }) {
+   if (src) {
+     return (
+@@ -17,7 +16,7 @@ export function Photo({ src, alt = '', className = '' }) {
+   }
+   return (
+     <div
+-      className={`w-full h-full grid place-items-center bg-stone-100 text-stone-500 ${className}`}
++      className={`w-full h-full grid place-items-center bg-soft text-muted ${className}`}
+       aria-label="사진 준비 중"
+     >
+       <ImageIcon size={26} strokeWidth={1.5} />
+@@ -25,36 +24,27 @@ export function Photo({ src, alt = '', className = '' }) {
+   );
+ }
+ 
+-// 사진 카드. 기울이지 않고 반듯하게 놓습니다.
+ export function Polaroid({ src, alt, caption, className = '' }) {
+   return (
+-    <figure className={`bg-white border border-stone-300 rounded-lg overflow-hidden ${className}`}>
++    <figure className={`bg-card border border-line rounded-box overflow-hidden ${className}`}>
+       <div className="aspect-[4/3]">
+         <Photo src={src} alt={alt} />
+       </div>
+-      {caption && (
+-        <figcaption className="px-3 py-2 text-center text-[15px] text-stone-700">{caption}</figcaption>
+-      )}
++      {caption && <figcaption className="px-3 py-2 text-center text-[15px] text-muted">{caption}</figcaption>}
+     </figure>
+   );
+ }
+ 
+-// 화면 제목. 왼쪽 남색 띠 하나로만 구분합니다.
+-export function PageTitle({ children, icon: Icon }) {
++export function PageTitle({ children }) {
+   return (
+-    <div className="flex items-center gap-3 mb-5 border-l-[6px] border-navy-800 pl-3 py-1">
+-      {Icon && <Icon size={24} className="shrink-0 text-navy-800" aria-hidden="true" />}
+-      <h2 className="text-[22px] font-bold text-navy-900 leading-snug">{children}</h2>
++    <div className="mb-5 border-l-[6px] border-accent pl-3 py-1">
++      <h2 className="text-[22px] font-bold text-accent leading-snug">{children}</h2>
+     </div>
+   );
+ }
+ 
+ export function Card({ children, className = '' }) {
+-  return (
+-    <section className={`bg-white border border-stone-300 rounded-lg p-5 ${className}`}>
+-      {children}
+-    </section>
+-  );
++  return <section className={`bg-card border border-line rounded-box p-5 ${className}`}>{children}</section>;
+ }
+ 
+ export function BackButton({ to = 'home', param, label = '되돌아가기' }) {
+@@ -62,21 +52,20 @@ export function BackButton({ to = 'home', param, label = '되돌아가기' }) {
+     <button
+       type="button"
+       onClick={() => navigate(to, param)}
+-      className="inline-flex items-center justify-center gap-2 min-h-[52px] rounded-lg border-2 border-navy-800 bg-white px-6 text-[17px] font-bold text-navy-800"
++      className="inline-flex items-center justify-center gap-2 min-h-[52px] rounded-pill border-2 border-accent bg-card px-6 text-[17px] font-bold text-accent"
+     >
+       <ArrowLeft size={20} /> {label}
+     </button>
+   );
+ }
+ 
+-// 바깥 링크 단추. 화면 너비를 다 쓰고 높이는 56px 이상입니다.
+ export function LinkButton({ href, children, className = '' }) {
+   return (
+     <a
+       href={href}
+       target="_blank"
+       rel="noopener noreferrer"
+-      className={`flex w-full items-center justify-center gap-2 min-h-[56px] rounded-lg bg-navy-800 px-5 py-3 text-[18px] font-bold text-white ${className}`}
++      className={`flex w-full items-center justify-center gap-2 min-h-[56px] rounded-pill bg-accent px-5 py-3 text-[18px] font-bold text-onAccent ${className}`}
+     >
+       {children} <ExternalLink size={19} aria-hidden="true" />
+     </a>
+diff --git a/tailwind.config.js b/tailwind.config.js
+index c3ed38c..5abf25a 100644
+--- a/tailwind.config.js
++++ b/tailwind.config.js
+@@ -1,27 +1,16 @@
+ /** @type {import('tailwindcss').Config} */
++// 세 시안이 공유하는 중립 팔레트. 색은 구조 결정 뒤에 따로 정합니다.
+ export default {
+-  content: [
+-    "./index.html",
+-    "./src/**/*.{js,ts,jsx,tsx}",
+-  ],
++  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+   theme: {
+     extend: {
+       colors: {
+-        // 종이 바탕. 채도를 낮춰 눈부심을 줄입니다.
+-        paper: '#f4f2ed',
+-        // 본문 글자. 흰 카드 위에서 대비 15:1 이상입니다.
+-        ink: '#1c1917',
+-        // 강조색 하나만 씁니다. 짙은 남색.
+-        navy: {
+-          50: '#eef2f7',
+-          100: '#dfe7f0',
+-          200: '#c3d0e1',
+-          600: '#33547d',
+-          700: '#26456b',
+-          800: '#1d3552',
+-          900: '#16283f',
+-        },
++        edge: '#d6d3d1', paper: '#f4f2ed', card: '#ffffff',
++        ink: '#1c1917', muted: '#44403c', line: '#d6d3d1',
++        accent: '#1d3552', onAccent: '#ffffff',
++        soft: '#eef2f7', onSoft: '#16283f', warn: '#9f1239',
+       },
++      borderRadius: { box: '10px', pill: '10px' },
+     },
+   },
+   plugins: [],
