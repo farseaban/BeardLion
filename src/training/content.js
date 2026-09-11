@@ -28,7 +28,7 @@ export const meta = {
 
 // 첫 화면 사진. public/photos/ 안의 파일명을 적습니다. 4장이 보기 좋습니다.
 export const home = {
-  photos: ['', '', '', ''], // TODO 예: ['jeoksangsan.jpg', 'yaksok.jpg', 'taekwondowon.jpg', 'lecture.jpg']
+  photos: ['images4.jpg', 'images1.jpg', 'image3.jpg', 'images2.jpg'],
 };
 
 // 하단 고정 메뉴. 순서와 이름만 바꿀 수 있습니다. id는 고정입니다.
@@ -103,11 +103,11 @@ export const course = {
   start: '대전교육과학연구원 출발 08:10',
   end: '대전교육과학연구원 도착 16:50',
   stops: [
-    { n: 1, label: '적상산', time: '10:00', type: 'guide', target: 'jeoksangsan', photo: '' },
-    { n: 2, label: '약속정원', time: '10:00', type: 'guide', target: 'yaksok', photo: '' },
-    { n: 3, label: '점심식사', time: '12:20', type: 'guide', target: 'lunch', photo: '' },
-    { n: 4, label: '무주태권도원', time: '13:30', type: 'guide', target: 'taekwondowon', photo: '' },
-    { n: 5, label: '만족도 조사', time: '16:50', type: 'page', target: 'participate', photo: '' },
+    { n: 1, label: '적상산', time: '10:00', type: 'guide', target: 'jeoksangsan', photo: 'images4.jpg' },
+    { n: 2, label: '약속정원', time: '10:00', type: 'guide', target: 'yaksok', photo: 'images1.jpg' },
+    { n: 3, label: '점심식사', time: '12:20', type: 'guide', target: 'lunch', photo: 'images2.jpg' },
+    { n: 4, label: '무주태권도원', time: '13:30', type: 'guide', target: 'taekwondowon', photo: 'image3.jpg' },
+    { n: 5, label: '만족도 조사', time: '16:50', type: 'page', target: 'participate', photo: 'images2.jpg' },
   ],
 };
 
@@ -121,7 +121,7 @@ export const guides = {
       'TODO: 적상산 소개 문구를 넣습니다. (위치, 특징, 관람 안내 등)',
     ],
     quotes: [],
-    photos: ['', ''],
+    photos: ['images4.jpg', 'image3.jpg'],
   },
   yaksok: {
     title: '약속정원',
@@ -133,7 +133,7 @@ export const guides = {
       'TODO: 약속정원 소개 문구를 넣습니다.',
     ],
     quotes: [],
-    photos: ['', ''],
+    photos: ['images1.jpg', 'images2.jpg'],
     links: [{ label: '희망 음료 신청하기', url: 'https://example.com/coffee' }], // TODO 구글폼 주소
   },
   lunch: {
@@ -154,7 +154,7 @@ export const guides = {
       'TODO: 태권도원 소개 문구와 관람 동선을 넣습니다.',
     ],
     quotes: [],
-    photos: ['', ''],
+    photos: ['image3.jpg', 'images2.jpg'],
   },
 };
 
