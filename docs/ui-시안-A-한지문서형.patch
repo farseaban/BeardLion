@@ -1,5 +1,5 @@
 diff --git a/index.html b/index.html
-index b4eb582..e86282b 100644
+index b4eb582..21520dc 100644
 --- a/index.html
 +++ b/index.html
 @@ -4,7 +4,7 @@
@@ -7,53 +7,99 @@ index b4eb582..e86282b 100644
      <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📷</text></svg>" />
      <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 -    <meta name="theme-color" content="#f4f2ed" />
-+    <meta name="theme-color" content="#f3ead8" />
++    <meta name="theme-color" content="#f4ecdc" />
      <meta name="robots" content="noindex" />
      <title>2026 교(원)감 AI·디지털 직무연수 안내</title>
      <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 diff --git a/src/training/TrainingSite.jsx b/src/training/TrainingSite.jsx
-index 691b484..2a99179 100644
+index 691b484..d20dd00 100644
 --- a/src/training/TrainingSite.jsx
 +++ b/src/training/TrainingSite.jsx
-@@ -34,10 +34,10 @@ export default function TrainingSite() {
+@@ -3,56 +3,38 @@ import { meta, nav } from './content';
+ import { useHashRoute, navigate } from './useHashRoute';
+ import { Home, Schedule, Course, Guide, Materials, Participate } from './pages';
+ 
+-const icons = {
+-  home: HomeIcon,
+-  schedule: CalendarDays,
+-  course: Map,
+-  materials: BookOpen,
+-  participate: CheckCircle2,
+-};
++const icons = { home: HomeIcon, schedule: CalendarDays, course: Map, materials: BookOpen, participate: CheckCircle2 };
+ 
+ function Screen({ page, param }) {
+   switch (page) {
+-    case 'schedule':
+-      return <Schedule />;
+-    case 'course':
+-      return <Course />;
+-    case 'guide':
+-      return <Guide id={param} />;
+-    case 'materials':
+-      return <Materials />;
+-    case 'participate':
+-      return <Participate />;
+-    default:
+-      return <Home />;
++    case 'schedule': return <Schedule />;
++    case 'course': return <Course />;
++    case 'guide': return <Guide id={param} />;
++    case 'materials': return <Materials />;
++    case 'participate': return <Participate />;
++    default: return <Home />;
+   }
+ }
+ 
+ export default function TrainingSite() {
+   const { page, param } = useHashRoute();
+-  // 장소 소개 화면은 코스 메뉴를 켜 둡니다.
    const active = page === 'guide' ? 'course' : page;
  
    return (
 -    <div className="min-h-dvh bg-stone-300 text-ink">
-+    <div className="min-h-dvh bg-stone-400/40 text-ink">
++    <div className="min-h-dvh bg-edge text-ink">
        <div className="mx-auto max-w-md min-h-dvh bg-paper flex flex-col">
 -        <header className="px-4 pt-4 pb-3 border-b border-stone-300">
 -          <p className="text-[15px] font-bold text-navy-800">{meta.org}</p>
-+        <header className="px-4 pt-4 pb-3 border-b border-warm-200">
-+          <p className="text-[15px] font-bold text-warm-800">{meta.org}</p>
-           {page !== 'home' && (
-             <p className="text-[15px] text-stone-700 mt-0.5">
-               {meta.year} {meta.title}
-@@ -52,7 +52,7 @@ export default function TrainingSite() {
-         {/* 하단 메뉴. 한글 이름을 크게 보여 주고 그림은 거들기만 합니다. */}
+-          {page !== 'home' && (
+-            <p className="text-[15px] text-stone-700 mt-0.5">
+-              {meta.year} {meta.title}
+-            </p>
+-          )}
++        <header className="px-4 pt-4 pb-3 border-b border-line">
++          <p className="text-[15px] font-bold text-accent">{meta.org}</p>
++          {page !== 'home' && <p className="text-[15px] text-muted mt-0.5">{meta.year} {meta.title}</p>}
+         </header>
+ 
+         <main className="flex-1 px-4 pb-32 pt-5">
+           <Screen page={page} param={param} />
+         </main>
+ 
+-        {/* 하단 메뉴. 한글 이름을 크게 보여 주고 그림은 거들기만 합니다. */}
          <nav
            aria-label="주요 메뉴"
 -          className="fixed bottom-0 inset-x-0 mx-auto max-w-md bg-white border-t-2 border-navy-800"
-+          className="fixed bottom-0 inset-x-0 mx-auto max-w-md bg-white border-t-2 border-warm-200 rounded-t-2xl shadow-[0_-4px_14px_rgba(0,0,0,0.08)]"
++          className="fixed bottom-0 inset-x-0 mx-auto max-w-md bg-card border-t-2 border-accent"
          >
            <ul className="grid grid-cols-5 gap-1 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
              {nav.map((n) => {
-@@ -64,8 +64,8 @@ export default function TrainingSite() {
+@@ -64,8 +46,8 @@ export default function TrainingSite() {
                      type="button"
                      onClick={() => navigate(n.id)}
                      aria-current={on ? 'page' : undefined}
 -                    className={`w-full min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 ${
 -                      on ? 'bg-navy-800 text-white' : 'text-navy-800'
-+                    className={`w-full min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-2xl px-1 py-2 ${
-+                      on ? 'bg-warm-800 text-white shadow' : 'text-warm-800'
++                    className={`w-full min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-box px-1 py-2 ${
++                      on ? 'bg-accent text-onAccent' : 'text-accent'
                      }`}
                    >
                      <Icon size={21} strokeWidth={on ? 2.4 : 2} aria-hidden="true" />
 diff --git a/src/training/pages.jsx b/src/training/pages.jsx
-index df580ef..b015cb8 100644
+index df580ef..b733b49 100644
 --- a/src/training/pages.jsx
 +++ b/src/training/pages.jsx
-@@ -1,26 +1,17 @@
+@@ -1,16 +1,4 @@
 -import {
 -  ChevronRight,
 -  MapPin,
@@ -71,27 +117,25 @@ index df580ef..b015cb8 100644
  import { meta, home, schedule, course, guides, materials, participate } from './content';
  import { navigate } from './useHashRoute';
  import { Photo, Polaroid, PageTitle, Card, BackButton, LinkButton } from './ui';
- 
- // ── 첫 화면 ─────────────────────────────────────────────
-+// 사진을 아주 조금만 기울입니다. 읽는 데 지장이 없는 정도입니다.
-+const tilt = ['-rotate-2', 'rotate-1', 'rotate-2', '-rotate-1'];
-+
+@@ -19,8 +7,11 @@ import { Photo, Polaroid, PageTitle, Card, BackButton, LinkButton } from './ui';
  export function Home() {
    return (
      <div>
--      <div className="text-center">
++      <div className="-mx-4 -mt-5 mb-5 aspect-[16/10] overflow-hidden border-b-2 border-accent">
++        <Photo src={home.photos[0]} alt="" />
++      </div>
+       <div className="text-center">
 -        <p className="text-[17px] font-bold text-navy-800">
-+      <div className="text-center bg-warm-100 border border-warm-200 rounded-2xl px-4 py-5">
-+        <p className="text-[17px] font-bold text-warm-800">
++        <p className="text-[17px] font-bold text-accent">
            {meta.year} {meta.audience}
          </p>
          <h1 className="mt-2 text-[26px] font-bold leading-snug text-ink">{meta.title}</h1>
-@@ -30,16 +21,16 @@ export function Home() {
+@@ -30,20 +21,20 @@ export function Home() {
          {meta.summary.map((s, i) => (
            <li
              key={i}
 -            className="bg-white border border-stone-300 border-l-[6px] border-l-navy-800 rounded-lg px-4 py-3 text-[16px] leading-relaxed text-ink"
-+            className="bg-white border border-stone-300 border-l-[6px] border-l-warm-800 rounded-lg px-4 py-3 text-[16px] leading-relaxed text-ink"
++            className="bg-card border border-line border-l-[6px] border-l-accent rounded-box px-4 py-3 text-[16px] leading-relaxed text-ink"
            >
              {s}
            </li>
@@ -99,62 +143,71 @@ index df580ef..b015cb8 100644
        </ul>
  
 -      <div className="grid grid-cols-2 gap-3 mt-6">
-+      <div className="grid grid-cols-2 gap-4 mt-7">
-         {home.photos.map((p, i) => (
--          <Polaroid key={i} src={p} alt="" />
-+          <Polaroid key={i} src={p} alt="" className={tilt[i % tilt.length]} />
+-        {home.photos.map((p, i) => (
++      <div className="grid grid-cols-3 gap-2 mt-6">
++        {home.photos.slice(1).map((p, i) => (
+           <Polaroid key={i} src={p} alt="" />
          ))}
        </div>
  
-@@ -65,20 +56,20 @@ function Lines({ value }) {
+-      <p className="mt-8 text-center text-[16px] leading-relaxed text-stone-700">
++      <p className="mt-8 text-center text-[16px] leading-relaxed text-muted">
+         {meta.place} 현장연수 안내 페이지입니다.
+         <br />
+         아래 메뉴에서 일정과 코스를 확인하세요.
+@@ -65,28 +56,28 @@ function Lines({ value }) {
  export function Schedule() {
    return (
      <>
 -      <PageTitle icon={CalendarDays}>{schedule.title}</PageTitle>
-+      <PageTitle emoji="🗓️">{schedule.title}</PageTitle>
++      <PageTitle>{schedule.title}</PageTitle>
  
        <div className="space-y-6">
          {schedule.days.map((day) => (
 -          <section key={day.label} className="border border-stone-300 rounded-lg overflow-hidden bg-white">
 -            <h3 className="bg-navy-800 px-4 py-3 text-[17px] font-bold text-white">{day.label}</h3>
-+          <section key={day.label} className="border border-warm-200 rounded-2xl overflow-hidden bg-white shadow-sm">
-+            <h3 className="bg-warm-800 px-4 py-3 text-[17px] font-bold text-white">{day.label}</h3>
++          <section key={day.label} className="border border-line rounded-box overflow-hidden bg-card">
++            <h3 className="bg-accent px-4 py-3 text-[17px] font-bold text-onAccent">{day.label}</h3>
              <ul>
                {day.rows.map((r, i) => (
                  <li
                    key={i}
 -                  className="grid grid-cols-[92px_1fr] gap-3 px-4 py-4 border-t border-stone-300 first:border-t-0"
-+                  className="grid grid-cols-[92px_1fr] gap-3 px-4 py-4 border-t border-warm-200 first:border-t-0"
++                  className="grid grid-cols-[92px_1fr] gap-3 px-4 py-4 border-t border-line first:border-t-0"
                  >
                    <div>
 -                    <p className="text-[15px] font-bold text-navy-800 leading-snug">{r[0]}</p>
-+                    <p className="text-[15px] font-bold text-warm-800 leading-snug">{r[0]}</p>
-                     {r[1] && <p className="text-[14px] text-stone-700">{r[1]}</p>}
+-                    {r[1] && <p className="text-[14px] text-stone-700">{r[1]}</p>}
++                    <p className="text-[15px] font-bold text-accent leading-snug">{r[0]}</p>
++                    {r[1] && <p className="text-[14px] text-muted">{r[1]}</p>}
                    </div>
                    <div>
-@@ -86,7 +77,7 @@ export function Schedule() {
+                     <p className="text-[17px] leading-relaxed text-ink">
                        <Lines value={r[2]} />
                      </p>
                      {r[3] && (
 -                      <p className="mt-1 flex items-start gap-1 text-[15px] text-navy-700">
-+                      <p className="mt-1 flex items-start gap-1 text-[15px] text-warm-700">
++                      <p className="mt-1 flex items-start gap-1 text-[15px] text-accent">
                          <MapPin size={16} className="mt-1 shrink-0" aria-hidden="true" />
                          {r[3]}
                        </p>
-@@ -101,13 +92,13 @@ export function Schedule() {
+@@ -99,15 +90,15 @@ export function Schedule() {
+         ))}
+       </div>
  
-       <p className="mt-4 text-[15px] text-stone-700">{schedule.note}</p>
+-      <p className="mt-4 text-[15px] text-stone-700">{schedule.note}</p>
++      <p className="mt-4 text-[15px] text-muted">{schedule.note}</p>
  
 -      <div className="mt-6 border border-stone-300 rounded-lg bg-white px-4 py-4 text-[16px]">
 -        <p className="font-bold text-navy-800">
-+      <div className="mt-6 border border-warm-200 rounded-2xl bg-white shadow-sm px-4 py-4 text-[16px]">
-+        <p className="font-bold text-warm-800">
++      <div className="mt-6 border border-line rounded-box bg-card px-4 py-4 text-[16px]">
++        <p className="font-bold text-accent">
            {meta.dept} {meta.contact.role} {meta.contact.name}
          </p>
          <a
            href={`tel:${meta.contact.phone}`}
 -          className="mt-2 inline-flex items-center gap-2 min-h-[48px] text-[18px] font-bold text-navy-800 underline"
-+          className="mt-2 inline-flex items-center gap-2 min-h-[48px] text-[18px] font-bold text-warm-800 underline"
++          className="mt-2 inline-flex items-center gap-2 min-h-[48px] text-[18px] font-bold text-accent underline"
          >
            <Phone size={20} aria-hidden="true" /> {meta.contact.phone}
          </a>
@@ -163,10 +216,10 @@ index df580ef..b015cb8 100644
    return (
      <>
 -      <PageTitle icon={MapIcon}>{course.title}</PageTitle>
-+      <PageTitle emoji="🗺️">{course.title}</PageTitle>
++      <PageTitle>{course.title}</PageTitle>
  
 -      <p className="flex items-center gap-2 rounded-lg bg-navy-50 border border-navy-200 px-4 py-3 text-[16px] font-bold text-navy-900">
-+      <p className="flex items-center gap-2 rounded-lg bg-warm-50 border border-warm-200 px-4 py-3 text-[16px] font-bold text-warm-900">
++      <p className="flex items-center gap-2 rounded-box bg-soft border border-line px-4 py-3 text-[16px] font-bold text-onSoft">
          <MapPin size={19} className="shrink-0" aria-hidden="true" /> {course.start}
        </p>
  
@@ -175,24 +228,25 @@ index df580ef..b015cb8 100644
            const inner = (
              <>
 -              <span className="grid place-items-center w-9 h-9 shrink-0 rounded-full bg-navy-800 text-white text-[16px] font-bold">
-+              <span className="grid place-items-center w-9 h-9 shrink-0 rounded-full bg-warm-800 text-white text-[16px] font-bold">
++              <span className="grid place-items-center w-9 h-9 shrink-0 rounded-full bg-accent text-onAccent text-[16px] font-bold">
                  {s.n}
                </span>
 -              <span className="w-20 h-16 shrink-0 overflow-hidden rounded-md border border-stone-300">
-+              <span className="w-20 h-16 shrink-0 overflow-hidden rounded-lg border border-warm-200">
++              <span className="w-20 h-16 shrink-0 overflow-hidden rounded-box border border-line">
                  <Photo src={s.photo} alt="" />
                </span>
                <span className="flex-1 text-left">
                  <span className="block text-[18px] font-bold text-ink leading-snug">{s.label}</span>
-                 {s.time && <span className="block text-[15px] text-stone-700">{s.time}</span>}
+-                {s.time && <span className="block text-[15px] text-stone-700">{s.time}</span>}
++                {s.time && <span className="block text-[15px] text-muted">{s.time}</span>}
                </span>
 -              <ChevronRight size={24} className="shrink-0 text-navy-700" aria-hidden="true" />
-+              <ChevronRight size={24} className="shrink-0 text-warm-700" aria-hidden="true" />
++              <ChevronRight size={24} className="shrink-0 text-accent" aria-hidden="true" />
              </>
            );
            const cls =
 -            'flex items-center gap-3 w-full min-h-[80px] bg-white border border-stone-300 rounded-lg p-3 text-left';
-+            'flex items-center gap-3 w-full min-h-[80px] bg-white border border-warm-200 rounded-2xl shadow-sm p-3 text-left';
++            'flex items-center gap-3 w-full min-h-[80px] bg-card border border-line rounded-box p-3 text-left';
            return (
              <li key={s.n}>
                {s.type === 'link' ? (
@@ -201,7 +255,7 @@ index df580ef..b015cb8 100644
        </ol>
  
 -      <p className="mt-4 flex items-center gap-2 rounded-lg bg-navy-50 border border-navy-200 px-4 py-3 text-[16px] font-bold text-navy-900">
-+      <p className="mt-4 flex items-center gap-2 rounded-lg bg-warm-50 border border-warm-200 px-4 py-3 text-[16px] font-bold text-warm-900">
++      <p className="mt-4 flex items-center gap-2 rounded-box bg-soft border border-line px-4 py-3 text-[16px] font-bold text-onSoft">
          <Flag size={19} className="shrink-0" aria-hidden="true" /> {course.end}
        </p>
      </>
@@ -210,10 +264,10 @@ index df580ef..b015cb8 100644
    return (
      <>
 -      <PageTitle icon={MapPin}>{g.title}</PageTitle>
-+      <PageTitle emoji="📍">{g.title}</PageTitle>
++      <PageTitle>{g.title}</PageTitle>
        <Card>
 -        <h3 className="text-[18px] font-bold text-navy-800 mb-3">한 눈에 보기</h3>
-+        <h3 className="text-[18px] font-bold text-warm-800 mb-3">한 눈에 보기</h3>
++        <h3 className="text-[18px] font-bold text-accent mb-3">한 눈에 보기</h3>
          <ul className="list-disc pl-5 space-y-2.5 text-[17px] leading-relaxed text-ink">
            {g.summary.map((s, i) => (
              <Bullet key={i} item={s} />
@@ -222,7 +276,7 @@ index df580ef..b015cb8 100644
  
          {g.quotes?.length > 0 && (
 -          <div className="my-6 border-l-4 border-navy-200 pl-4 text-[17px] leading-relaxed text-navy-900">
-+          <div className="my-6 border-l-4 border-warm-200 pl-4 text-[17px] leading-relaxed text-warm-900">
++          <div className="my-6 border-l-4 border-line pl-4 text-[17px] leading-relaxed text-onSoft">
              {g.quotes.map((q, i) => (
                <p key={i}>{q}</p>
              ))}
@@ -231,45 +285,54 @@ index df580ef..b015cb8 100644
            <div className="grid grid-cols-2 gap-3 mt-5">
              {g.photos.map((p, i) => (
 -              <div key={i} className="aspect-[4/3] overflow-hidden rounded-lg border border-stone-300">
-+              <div key={i} className="aspect-[4/3] overflow-hidden rounded-xl border border-warm-200">
++              <div key={i} className="aspect-[4/3] overflow-hidden rounded-box border border-line">
                  <Photo src={p} alt="" />
                </div>
              ))}
-@@ -251,13 +242,13 @@ export function Guide({ id }) {
+@@ -251,16 +242,16 @@ export function Guide({ id }) {
  export function Materials() {
    return (
      <>
 -      <PageTitle icon={BookOpen}>{materials.title}</PageTitle>
-+      <PageTitle emoji="📚">{materials.title}</PageTitle>
-       <p className="mb-5 text-[16px] leading-relaxed text-stone-700">{materials.intro}</p>
+-      <p className="mb-5 text-[16px] leading-relaxed text-stone-700">{materials.intro}</p>
++      <PageTitle>{materials.title}</PageTitle>
++      <p className="mb-5 text-[16px] leading-relaxed text-muted">{materials.intro}</p>
        <div className="space-y-5">
          {materials.items.map((m) => (
            <Card key={m.id}>
              <h3 className="flex items-start gap-2 text-[19px] font-bold leading-snug text-ink">
 -              <FileText size={22} className="shrink-0 mt-1 text-navy-800" aria-hidden="true" />
-+              <FileText size={22} className="shrink-0 mt-1 text-warm-800" aria-hidden="true" />
++              <FileText size={22} className="shrink-0 mt-1 text-accent" aria-hidden="true" />
                {m.label}
              </h3>
-             {m.meta && <p className="mt-2 text-[15px] text-stone-700">{m.meta}</p>}
-@@ -283,10 +274,10 @@ export function Participate() {
+-            {m.meta && <p className="mt-2 text-[15px] text-stone-700">{m.meta}</p>}
++            {m.meta && <p className="mt-2 text-[15px] text-muted">{m.meta}</p>}
+             <ul className="mt-4 list-disc pl-5 space-y-2 text-[17px] leading-relaxed text-ink">
+               {m.summary.map((s, i) => (
+                 <li key={i}>{s}</li>
+@@ -283,13 +274,13 @@ export function Participate() {
    const { survey, coffee } = participate;
    return (
      <>
 -      <PageTitle icon={ClipboardCheck}>{participate.title}</PageTitle>
-+      <PageTitle emoji="✅">{participate.title}</PageTitle>
++      <PageTitle>{participate.title}</PageTitle>
  
        <Card>
 -        <h3 className="flex items-center gap-2 text-[20px] font-bold text-navy-900">
-+        <h3 className="flex items-center gap-2 text-[20px] font-bold text-warm-900">
++        <h3 className="flex items-center gap-2 text-[20px] font-bold text-onSoft">
            <Coffee size={22} className="shrink-0" aria-hidden="true" /> {coffee.label}
          </h3>
-         <p className="mt-2 text-[16px] font-bold text-red-800">{coffee.when}</p>
+-        <p className="mt-2 text-[16px] font-bold text-red-800">{coffee.when}</p>
++        <p className="mt-2 text-[16px] font-bold text-warn">{coffee.when}</p>
+         <div className="mt-3 space-y-2 text-[17px] leading-relaxed text-ink">
+           {coffee.message.map((m, i) => (
+             <p key={i}>{m}</p>
 @@ -300,7 +291,7 @@ export function Participate() {
            {coffee.drinks.map((d) => (
              <li
                key={d}
 -              className="rounded-lg bg-stone-100 border border-stone-300 px-3 py-2.5 text-[15px] text-ink"
-+              className="rounded-xl bg-warm-50 border border-warm-200 px-3 py-2.5 text-[15px] text-ink"
++              className="rounded-box bg-soft border border-line px-3 py-2.5 text-[15px] text-ink"
              >
                {d}
              </li>
@@ -279,14 +342,14 @@ index df580ef..b015cb8 100644
  
 -        <div className="mt-7 pt-5 border-t border-stone-300">
 -          <p className="text-[16px] font-bold text-navy-800 mb-3">호차별 담당 장학사</p>
-+        <div className="mt-7 pt-5 border-t border-warm-200">
-+          <p className="text-[16px] font-bold text-warm-800 mb-3">호차별 담당 장학사</p>
++        <div className="mt-7 pt-5 border-t border-line">
++          <p className="text-[16px] font-bold text-accent mb-3">호차별 담당 장학사</p>
            <ul className="grid grid-cols-2 gap-2">
              {coffee.buses.map((b) => (
 -              <li key={b.bus} className="rounded-lg bg-navy-50 border border-navy-200 px-3 py-2.5 text-[16px]">
 -                <span className="font-bold text-navy-900">{b.bus}</span>
-+              <li key={b.bus} className="rounded-xl bg-warm-100 border border-warm-200 px-3 py-2.5 text-[16px]">
-+                <span className="font-bold text-warm-900">{b.bus}</span>
++              <li key={b.bus} className="rounded-box bg-soft border border-line px-3 py-2.5 text-[16px]">
++                <span className="font-bold text-onSoft">{b.bus}</span>
                  <span className="ml-2 text-ink">{b.staff}</span>
                </li>
              ))}
@@ -295,108 +358,131 @@ index df580ef..b015cb8 100644
                target="_blank"
                rel="noopener noreferrer"
 -              className="mt-3 inline-flex items-center gap-2 min-h-[48px] text-[16px] font-bold text-navy-800 underline"
-+              className="mt-3 inline-flex items-center gap-2 min-h-[48px] text-[16px] font-bold text-warm-800 underline"
++              className="mt-3 inline-flex items-center gap-2 min-h-[48px] text-[16px] font-bold text-accent underline"
              >
                담당 장학사용 집계표 <ExternalLink size={17} aria-hidden="true" />
              </a>
-@@ -335,7 +326,7 @@ export function Participate() {
+@@ -335,10 +326,10 @@ export function Participate() {
        </Card>
  
        <Card className="mt-5">
 -        <h3 className="flex items-center gap-2 text-[20px] font-bold text-navy-900">
-+        <h3 className="flex items-center gap-2 text-[20px] font-bold text-warm-900">
++        <h3 className="flex items-center gap-2 text-[20px] font-bold text-onSoft">
            <ClipboardCheck size={22} className="shrink-0" aria-hidden="true" /> {survey.label}
          </h3>
-         <p className="mt-2 text-[16px] text-stone-700">{survey.when}</p>
+-        <p className="mt-2 text-[16px] text-stone-700">{survey.when}</p>
++        <p className="mt-2 text-[16px] text-muted">{survey.when}</p>
+         <div className="mt-3 space-y-2 text-[17px] leading-relaxed text-ink">
+           {survey.message.map((m, i) => (
+             <p key={i} className={i === 0 ? 'font-bold' : ''}>
 diff --git a/src/training/ui.jsx b/src/training/ui.jsx
-index da4d319..6e7c6db 100644
+index da4d319..44860c5 100644
 --- a/src/training/ui.jsx
 +++ b/src/training/ui.jsx
-@@ -17,7 +17,7 @@ export function Photo({ src, alt = '', className = '' }) {
+@@ -3,7 +3,6 @@ import { navigate } from './useHashRoute';
+ 
+ const base = import.meta.env.BASE_URL;
+ 
+-// 사진 자리. 파일명이 없으면 자리표시 그림을 보여 줍니다.
+ export function Photo({ src, alt = '', className = '' }) {
+   if (src) {
+     return (
+@@ -17,7 +16,7 @@ export function Photo({ src, alt = '', className = '' }) {
    }
    return (
      <div
 -      className={`w-full h-full grid place-items-center bg-stone-100 text-stone-500 ${className}`}
-+      className={`w-full h-full grid place-items-center bg-warm-100 text-warm-700 ${className}`}
++      className={`w-full h-full grid place-items-center bg-soft text-muted ${className}`}
        aria-label="사진 준비 중"
      >
        <ImageIcon size={26} strokeWidth={1.5} />
-@@ -25,33 +25,33 @@ export function Photo({ src, alt = '', className = '' }) {
+@@ -25,36 +24,27 @@ export function Photo({ src, alt = '', className = '' }) {
    );
  }
  
 -// 사진 카드. 기울이지 않고 반듯하게 놓습니다.
-+// 사진 카드. 흰 테를 두른 사진 느낌을 살립니다.
  export function Polaroid({ src, alt, caption, className = '' }) {
    return (
 -    <figure className={`bg-white border border-stone-300 rounded-lg overflow-hidden ${className}`}>
--      <div className="aspect-[4/3]">
-+    <figure className={`bg-white p-2 pb-3 rounded-sm shadow-md ${className}`}>
-+      <div className="aspect-[4/3] overflow-hidden rounded-sm">
++    <figure className={`bg-card border border-line rounded-box overflow-hidden ${className}`}>
+       <div className="aspect-[4/3]">
          <Photo src={src} alt={alt} />
        </div>
-       {caption && (
+-      {caption && (
 -        <figcaption className="px-3 py-2 text-center text-[15px] text-stone-700">{caption}</figcaption>
-+        <figcaption className="pt-2 text-center text-[15px] text-stone-700">{caption}</figcaption>
-       )}
+-      )}
++      {caption && <figcaption className="px-3 py-2 text-center text-[15px] text-muted">{caption}</figcaption>}
      </figure>
    );
  }
  
 -// 화면 제목. 왼쪽 남색 띠 하나로만 구분합니다.
 -export function PageTitle({ children, icon: Icon }) {
-+// 화면 제목. 왼쪽 띠와 그림 기호로 구분합니다.
-+export function PageTitle({ children, emoji }) {
++export function PageTitle({ children }) {
    return (
 -    <div className="flex items-center gap-3 mb-5 border-l-[6px] border-navy-800 pl-3 py-1">
 -      {Icon && <Icon size={24} className="shrink-0 text-navy-800" aria-hidden="true" />}
 -      <h2 className="text-[22px] font-bold text-navy-900 leading-snug">{children}</h2>
-+    <div className="flex items-center gap-3 mb-5 border-l-[6px] border-warm-800 pl-3 py-1">
-+      {emoji && <span className="text-[26px] leading-none" aria-hidden="true">{emoji}</span>}
-+      <h2 className="text-[22px] font-bold text-warm-900 leading-snug">{children}</h2>
++    <div className="mb-5 border-l-[6px] border-accent pl-3 py-1">
++      <h2 className="text-[22px] font-bold text-accent leading-snug">{children}</h2>
      </div>
    );
  }
  
  export function Card({ children, className = '' }) {
-   return (
+-  return (
 -    <section className={`bg-white border border-stone-300 rounded-lg p-5 ${className}`}>
-+    <section className={`bg-white border border-warm-200 rounded-2xl shadow-sm p-5 ${className}`}>
-       {children}
-     </section>
-   );
-@@ -62,7 +62,7 @@ export function BackButton({ to = 'home', param, label = '되돌아가기' }) {
+-      {children}
+-    </section>
+-  );
++  return <section className={`bg-card border border-line rounded-box p-5 ${className}`}>{children}</section>;
+ }
+ 
+ export function BackButton({ to = 'home', param, label = '되돌아가기' }) {
+@@ -62,21 +52,20 @@ export function BackButton({ to = 'home', param, label = '되돌아가기' }) {
      <button
        type="button"
        onClick={() => navigate(to, param)}
 -      className="inline-flex items-center justify-center gap-2 min-h-[52px] rounded-lg border-2 border-navy-800 bg-white px-6 text-[17px] font-bold text-navy-800"
-+      className="inline-flex items-center justify-center gap-2 min-h-[52px] rounded-full border-2 border-warm-800 bg-white px-6 text-[17px] font-bold text-warm-800"
++      className="inline-flex items-center justify-center gap-2 min-h-[52px] rounded-pill border-2 border-accent bg-card px-6 text-[17px] font-bold text-accent"
      >
        <ArrowLeft size={20} /> {label}
      </button>
-@@ -76,7 +76,7 @@ export function LinkButton({ href, children, className = '' }) {
+   );
+ }
+ 
+-// 바깥 링크 단추. 화면 너비를 다 쓰고 높이는 56px 이상입니다.
+ export function LinkButton({ href, children, className = '' }) {
+   return (
+     <a
        href={href}
        target="_blank"
        rel="noopener noreferrer"
 -      className={`flex w-full items-center justify-center gap-2 min-h-[56px] rounded-lg bg-navy-800 px-5 py-3 text-[18px] font-bold text-white ${className}`}
-+      className={`flex w-full items-center justify-center gap-2 min-h-[56px] rounded-full bg-warm-800 px-5 py-3 text-[18px] font-bold text-white shadow-md ${className}`}
++      className={`flex w-full items-center justify-center gap-2 min-h-[56px] rounded-pill bg-accent px-5 py-3 text-[18px] font-bold text-onAccent ${className}`}
      >
        {children} <ExternalLink size={19} aria-hidden="true" />
      </a>
 diff --git a/tailwind.config.js b/tailwind.config.js
-index c3ed38c..9a566fa 100644
+index c3ed38c..8bb5bd4 100644
 --- a/tailwind.config.js
 +++ b/tailwind.config.js
-@@ -7,19 +7,20 @@ export default {
+@@ -1,27 +1,23 @@
+ /** @type {import('tailwindcss').Config} */
++// A안 한지 문서형
+ export default {
+-  content: [
+-    "./index.html",
+-    "./src/**/*.{js,ts,jsx,tsx}",
+-  ],
++  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
    theme: {
      extend: {
        colors: {
 -        // 종이 바탕. 채도를 낮춰 눈부심을 줄입니다.
 -        paper: '#f4f2ed',
-+        // A안의 따뜻한 종이색을 그대로 씁니다.
-+        paper: '#f3ead8',
-         // 본문 글자. 흰 카드 위에서 대비 15:1 이상입니다.
-         ink: '#1c1917',
+-        // 본문 글자. 흰 카드 위에서 대비 15:1 이상입니다.
+-        ink: '#1c1917',
 -        // 강조색 하나만 씁니다. 짙은 남색.
 -        navy: {
 -          50: '#eef2f7',
@@ -406,16 +492,20 @@ index c3ed38c..9a566fa 100644
 -          700: '#26456b',
 -          800: '#1d3552',
 -          900: '#16283f',
-+        // 강조색. 주황 계열이되 흰 배경에서 읽히는 짙기까지 내렸습니다.
-+        //   warm-800 대비 7.3:1, warm-700 대비 5.0:1 (본문 기준 4.5:1 이상)
-+        warm: {
-+          50: '#fdf6ea',
-+          100: '#fbebd3',
-+          200: '#f3d9ae',
-+          500: '#d97706',
-+          700: '#b45309',
-+          800: '#9a3412',
-+          900: '#7c2d12',
-         },
+-        },
++        edge: '#ded3bb',
++        paper: '#f4ecdc',
++        card: '#fdf8ee',
++        ink: '#241f1b',
++        muted: '#5b5145',
++        line: '#d6c6a6',
++        accent: '#a8321f',
++        onAccent: '#ffffff',
++        soft: '#f0e4cc',
++        onSoft: '#4a3a22',
++        warn: '#8f2d1c',
        },
++      borderRadius: { box: '0px', pill: '0px' },
      },
+   },
+   plugins: [],
