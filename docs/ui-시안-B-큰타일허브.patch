@@ -1,23 +1,16 @@
-diff --git a/index.html b/index.html
-index b4eb582..21520dc 100644
---- a/index.html
-+++ b/index.html
-@@ -4,7 +4,7 @@
-     <meta charset="UTF-8" />
-     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📷</text></svg>" />
-     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
--    <meta name="theme-color" content="#f4f2ed" />
-+    <meta name="theme-color" content="#f4ecdc" />
-     <meta name="robots" content="noindex" />
-     <title>2026 교(원)감 AI·디지털 직무연수 안내</title>
-     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 diff --git a/src/training/TrainingSite.jsx b/src/training/TrainingSite.jsx
-index 691b484..d20dd00 100644
+index 691b484..9f60de8 100644
 --- a/src/training/TrainingSite.jsx
 +++ b/src/training/TrainingSite.jsx
-@@ -3,56 +3,38 @@ import { meta, nav } from './content';
+@@ -1,81 +1,105 @@
+-import { Home as HomeIcon, CalendarDays, Map, BookOpen, CheckCircle2 } from 'lucide-react';
+-import { meta, nav } from './content';
++import { ChevronRight, ArrowLeft } from 'lucide-react';
++import { meta, nav, home } from './content';
  import { useHashRoute, navigate } from './useHashRoute';
- import { Home, Schedule, Course, Guide, Materials, Participate } from './pages';
+-import { Home, Schedule, Course, Guide, Materials, Participate } from './pages';
++import { Schedule, Course, Guide, Materials, Participate } from './pages';
++import { Photo } from './ui';
  
 -const icons = {
 -  home: HomeIcon,
@@ -25,9 +18,65 @@ index 691b484..d20dd00 100644
 -  course: Map,
 -  materials: BookOpen,
 -  participate: CheckCircle2,
--};
-+const icons = { home: HomeIcon, schedule: CalendarDays, course: Map, materials: BookOpen, participate: CheckCircle2 };
++// ── B안 : 큰 타일 허브 ────────────────────────────────────
++// 첫 화면 자체가 메뉴입니다. 화면 가득한 타일 네 개만 있습니다.
++// 하단 고정 메뉴가 없습니다. 들어갔다가 맨 위 큰 단추로 처음으로 돌아옵니다.
++// 누를 곳이 크고 적어서, 화면을 훑어 고르는 부담이 없습니다.
++
++const tiles = nav.filter((n) => n.id !== 'home');
++const tileNote = {
++  schedule: '9. 10. 특강과 9. 30. 무주 일정 전체',
++  course: '적상산 · 약속정원 · 점심 · 태권도원',
++  materials: '특강 요약, 실습 안내, 패들렛 과제',
++  participate: '희망 음료 신청, 만족도 조사',
+ };
  
++function Hub() {
++  return (
++    <div className="px-4 pb-10">
++      <div className="text-center pt-6">
++        <p className="text-[17px] font-bold text-accent">
++          {meta.year} {meta.audience}
++        </p>
++        <h1 className="mt-2 text-[26px] font-bold leading-snug text-ink">{meta.title}</h1>
++        <p className="mt-3 text-[16px] text-muted">{meta.org}</p>
++      </div>
++
++      <ul className="mt-7 space-y-4">
++        {tiles.map((t, i) => (
++          <li key={t.id}>
++            <button
++              type="button"
++              onClick={() => navigate(t.id)}
++              className="relative w-full h-[124px] overflow-hidden rounded-box border border-line text-left"
++            >
++              <span className="absolute inset-0">
++                <Photo src={home.photos[i] || ''} alt="" />
++              </span>
++              <span className="absolute inset-0 bg-gradient-to-r from-black/75 via-black/55 to-black/25" />
++              <span className="relative flex h-full items-center gap-3 px-5">
++                <span className="flex-1">
++                  <span className="block text-[24px] font-bold text-white leading-tight">{t.label}</span>
++                  <span className="block mt-1 text-[15px] text-white/90">{tileNote[t.id]}</span>
++                </span>
++                <ChevronRight size={30} className="shrink-0 text-white" aria-hidden="true" />
++              </span>
++            </button>
++          </li>
++        ))}
++      </ul>
++
++      <p className="mt-8 text-center text-[16px] text-muted">
++        {meta.dept} {meta.contact.role} {meta.contact.name}
++        <br />
++        <a href={`tel:${meta.contact.phone}`} className="inline-block mt-2 font-bold text-accent underline">
++          {meta.contact.phone}
++        </a>
++      </p>
++    </div>
++  );
++}
++
  function Screen({ page, param }) {
    switch (page) {
 -    case 'schedule':
@@ -47,14 +96,15 @@ index 691b484..d20dd00 100644
 +    case 'guide': return <Guide id={param} />;
 +    case 'materials': return <Materials />;
 +    case 'participate': return <Participate />;
-+    default: return <Home />;
++    default: return null;
    }
  }
  
  export default function TrainingSite() {
    const { page, param } = useHashRoute();
 -  // 장소 소개 화면은 코스 메뉴를 켜 둡니다.
-   const active = page === 'guide' ? 'course' : page;
+-  const active = page === 'guide' ? 'course' : page;
++  const atHub = page === 'home';
  
    return (
 -    <div className="min-h-dvh bg-stone-300 text-ink">
@@ -67,36 +117,63 @@ index 691b484..d20dd00 100644
 -              {meta.year} {meta.title}
 -            </p>
 -          )}
-+        <header className="px-4 pt-4 pb-3 border-b border-line">
-+          <p className="text-[15px] font-bold text-accent">{meta.org}</p>
-+          {page !== 'home' && <p className="text-[15px] text-muted mt-0.5">{meta.year} {meta.title}</p>}
-         </header>
- 
-         <main className="flex-1 px-4 pb-32 pt-5">
-           <Screen page={page} param={param} />
-         </main>
- 
+-        </header>
+-
+-        <main className="flex-1 px-4 pb-32 pt-5">
+-          <Screen page={page} param={param} />
+-        </main>
+-
 -        {/* 하단 메뉴. 한글 이름을 크게 보여 주고 그림은 거들기만 합니다. */}
-         <nav
-           aria-label="주요 메뉴"
+-        <nav
+-          aria-label="주요 메뉴"
 -          className="fixed bottom-0 inset-x-0 mx-auto max-w-md bg-white border-t-2 border-navy-800"
-+          className="fixed bottom-0 inset-x-0 mx-auto max-w-md bg-card border-t-2 border-accent"
-         >
-           <ul className="grid grid-cols-5 gap-1 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-             {nav.map((n) => {
-@@ -64,8 +46,8 @@ export default function TrainingSite() {
-                     type="button"
-                     onClick={() => navigate(n.id)}
-                     aria-current={on ? 'page' : undefined}
+-        >
+-          <ul className="grid grid-cols-5 gap-1 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+-            {nav.map((n) => {
+-              const Icon = icons[n.id];
+-              const on = active === n.id;
+-              return (
+-                <li key={n.id}>
+-                  <button
+-                    type="button"
+-                    onClick={() => navigate(n.id)}
+-                    aria-current={on ? 'page' : undefined}
 -                    className={`w-full min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 ${
 -                      on ? 'bg-navy-800 text-white' : 'text-navy-800'
-+                    className={`w-full min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-box px-1 py-2 ${
-+                      on ? 'bg-accent text-onAccent' : 'text-accent'
-                     }`}
-                   >
-                     <Icon size={21} strokeWidth={on ? 2.4 : 2} aria-hidden="true" />
+-                    }`}
+-                  >
+-                    <Icon size={21} strokeWidth={on ? 2.4 : 2} aria-hidden="true" />
+-                    <span className="text-[15px] font-bold whitespace-nowrap leading-none">{n.label}</span>
+-                  </button>
+-                </li>
+-              );
+-            })}
+-          </ul>
+-        </nav>
++        {atHub ? (
++          <Hub />
++        ) : (
++          <>
++            {/* 돌아가는 길이 화면마다 맨 위에 하나만 있습니다. */}
++            <div className="sticky top-0 z-10 bg-paper border-b border-line px-4 py-3">
++              <button
++                type="button"
++                onClick={() => navigate('home')}
++                className="flex w-full items-center justify-center gap-2 min-h-[56px] rounded-box bg-accent text-onAccent text-[18px] font-bold"
++              >
++                <ArrowLeft size={22} aria-hidden="true" /> 처음으로
++              </button>
++            </div>
++            <main className="flex-1 px-4 pt-5 pb-12">
++              <Screen page={page} param={param} />
++            </main>
++          </>
++        )}
+       </div>
+     </div>
+   );
 diff --git a/src/training/pages.jsx b/src/training/pages.jsx
-index df580ef..b733b49 100644
+index df580ef..9b268bf 100644
 --- a/src/training/pages.jsx
 +++ b/src/training/pages.jsx
 @@ -1,16 +1,4 @@
@@ -117,20 +194,16 @@ index df580ef..b733b49 100644
  import { meta, home, schedule, course, guides, materials, participate } from './content';
  import { navigate } from './useHashRoute';
  import { Photo, Polaroid, PageTitle, Card, BackButton, LinkButton } from './ui';
-@@ -19,8 +7,11 @@ import { Photo, Polaroid, PageTitle, Card, BackButton, LinkButton } from './ui';
- export function Home() {
+@@ -20,7 +8,7 @@ export function Home() {
    return (
      <div>
-+      <div className="-mx-4 -mt-5 mb-5 aspect-[16/10] overflow-hidden border-b-2 border-accent">
-+        <Photo src={home.photos[0]} alt="" />
-+      </div>
        <div className="text-center">
 -        <p className="text-[17px] font-bold text-navy-800">
 +        <p className="text-[17px] font-bold text-accent">
            {meta.year} {meta.audience}
          </p>
          <h1 className="mt-2 text-[26px] font-bold leading-snug text-ink">{meta.title}</h1>
-@@ -30,20 +21,20 @@ export function Home() {
+@@ -30,7 +18,7 @@ export function Home() {
          {meta.summary.map((s, i) => (
            <li
              key={i}
@@ -139,14 +212,7 @@ index df580ef..b733b49 100644
            >
              {s}
            </li>
-         ))}
-       </ul>
- 
--      <div className="grid grid-cols-2 gap-3 mt-6">
--        {home.photos.map((p, i) => (
-+      <div className="grid grid-cols-3 gap-2 mt-6">
-+        {home.photos.slice(1).map((p, i) => (
-           <Polaroid key={i} src={p} alt="" />
+@@ -43,7 +31,7 @@ export function Home() {
          ))}
        </div>
  
@@ -155,7 +221,7 @@ index df580ef..b733b49 100644
          {meta.place} 현장연수 안내 페이지입니다.
          <br />
          아래 메뉴에서 일정과 코스를 확인하세요.
-@@ -65,28 +56,28 @@ function Lines({ value }) {
+@@ -65,28 +53,28 @@ function Lines({ value }) {
  export function Schedule() {
    return (
      <>
@@ -191,7 +257,7 @@ index df580ef..b733b49 100644
                          <MapPin size={16} className="mt-1 shrink-0" aria-hidden="true" />
                          {r[3]}
                        </p>
-@@ -99,15 +90,15 @@ export function Schedule() {
+@@ -99,15 +87,15 @@ export function Schedule() {
          ))}
        </div>
  
@@ -211,7 +277,7 @@ index df580ef..b733b49 100644
          >
            <Phone size={20} aria-hidden="true" /> {meta.contact.phone}
          </a>
-@@ -125,9 +116,9 @@ function go(stop) {
+@@ -125,9 +113,9 @@ function go(stop) {
  export function Course() {
    return (
      <>
@@ -223,7 +289,7 @@ index df580ef..b733b49 100644
          <MapPin size={19} className="shrink-0" aria-hidden="true" /> {course.start}
        </p>
  
-@@ -135,21 +126,21 @@ export function Course() {
+@@ -135,21 +123,21 @@ export function Course() {
          {course.stops.map((s) => {
            const inner = (
              <>
@@ -250,7 +316,7 @@ index df580ef..b733b49 100644
            return (
              <li key={s.n}>
                {s.type === 'link' ? (
-@@ -166,7 +157,7 @@ export function Course() {
+@@ -166,7 +154,7 @@ export function Course() {
          })}
        </ol>
  
@@ -259,7 +325,7 @@ index df580ef..b733b49 100644
          <Flag size={19} className="shrink-0" aria-hidden="true" /> {course.end}
        </p>
      </>
-@@ -202,9 +193,9 @@ export function Guide({ id }) {
+@@ -202,9 +190,9 @@ export function Guide({ id }) {
    }
    return (
      <>
@@ -271,7 +337,7 @@ index df580ef..b733b49 100644
          <ul className="list-disc pl-5 space-y-2.5 text-[17px] leading-relaxed text-ink">
            {g.summary.map((s, i) => (
              <Bullet key={i} item={s} />
-@@ -212,7 +203,7 @@ export function Guide({ id }) {
+@@ -212,7 +200,7 @@ export function Guide({ id }) {
          </ul>
  
          {g.quotes?.length > 0 && (
@@ -280,7 +346,7 @@ index df580ef..b733b49 100644
              {g.quotes.map((q, i) => (
                <p key={i}>{q}</p>
              ))}
-@@ -222,7 +213,7 @@ export function Guide({ id }) {
+@@ -222,7 +210,7 @@ export function Guide({ id }) {
          {g.photos?.length > 0 && (
            <div className="grid grid-cols-2 gap-3 mt-5">
              {g.photos.map((p, i) => (
@@ -289,7 +355,7 @@ index df580ef..b733b49 100644
                  <Photo src={p} alt="" />
                </div>
              ))}
-@@ -251,16 +242,16 @@ export function Guide({ id }) {
+@@ -251,16 +239,16 @@ export function Guide({ id }) {
  export function Materials() {
    return (
      <>
@@ -310,7 +376,7 @@ index df580ef..b733b49 100644
              <ul className="mt-4 list-disc pl-5 space-y-2 text-[17px] leading-relaxed text-ink">
                {m.summary.map((s, i) => (
                  <li key={i}>{s}</li>
-@@ -283,13 +274,13 @@ export function Participate() {
+@@ -283,13 +271,13 @@ export function Participate() {
    const { survey, coffee } = participate;
    return (
      <>
@@ -327,7 +393,7 @@ index df580ef..b733b49 100644
          <div className="mt-3 space-y-2 text-[17px] leading-relaxed text-ink">
            {coffee.message.map((m, i) => (
              <p key={i}>{m}</p>
-@@ -300,7 +291,7 @@ export function Participate() {
+@@ -300,7 +288,7 @@ export function Participate() {
            {coffee.drinks.map((d) => (
              <li
                key={d}
@@ -336,7 +402,7 @@ index df580ef..b733b49 100644
              >
                {d}
              </li>
-@@ -311,12 +302,12 @@ export function Participate() {
+@@ -311,12 +299,12 @@ export function Participate() {
            <LinkButton href={coffee.url}>{coffee.buttonLabel}</LinkButton>
          </div>
  
@@ -353,7 +419,7 @@ index df580ef..b733b49 100644
                  <span className="ml-2 text-ink">{b.staff}</span>
                </li>
              ))}
-@@ -326,7 +317,7 @@ export function Participate() {
+@@ -326,7 +314,7 @@ export function Participate() {
                href={coffee.tallyUrl}
                target="_blank"
                rel="noopener noreferrer"
@@ -362,7 +428,7 @@ index df580ef..b733b49 100644
              >
                담당 장학사용 집계표 <ExternalLink size={17} aria-hidden="true" />
              </a>
-@@ -335,10 +326,10 @@ export function Participate() {
+@@ -335,10 +323,10 @@ export function Participate() {
        </Card>
  
        <Card className="mt-5">
@@ -464,12 +530,12 @@ index da4d319..44860c5 100644
        {children} <ExternalLink size={19} aria-hidden="true" />
      </a>
 diff --git a/tailwind.config.js b/tailwind.config.js
-index c3ed38c..8bb5bd4 100644
+index c3ed38c..5abf25a 100644
 --- a/tailwind.config.js
 +++ b/tailwind.config.js
-@@ -1,27 +1,23 @@
+@@ -1,27 +1,16 @@
  /** @type {import('tailwindcss').Config} */
-+// A안 한지 문서형
++// 세 시안이 공유하는 중립 팔레트. 색은 구조 결정 뒤에 따로 정합니다.
  export default {
 -  content: [
 -    "./index.html",
@@ -493,19 +559,12 @@ index c3ed38c..8bb5bd4 100644
 -          800: '#1d3552',
 -          900: '#16283f',
 -        },
-+        edge: '#ded3bb',
-+        paper: '#f4ecdc',
-+        card: '#fdf8ee',
-+        ink: '#241f1b',
-+        muted: '#5b5145',
-+        line: '#d6c6a6',
-+        accent: '#a8321f',
-+        onAccent: '#ffffff',
-+        soft: '#f0e4cc',
-+        onSoft: '#4a3a22',
-+        warn: '#8f2d1c',
++        edge: '#d6d3d1', paper: '#f4f2ed', card: '#ffffff',
++        ink: '#1c1917', muted: '#44403c', line: '#d6d3d1',
++        accent: '#1d3552', onAccent: '#ffffff',
++        soft: '#eef2f7', onSoft: '#16283f', warn: '#9f1239',
        },
-+      borderRadius: { box: '0px', pill: '0px' },
++      borderRadius: { box: '10px', pill: '10px' },
      },
    },
    plugins: [],

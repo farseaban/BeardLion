@@ -1,23 +1,16 @@
-diff --git a/index.html b/index.html
-index b4eb582..24ac4cd 100644
---- a/index.html
-+++ b/index.html
-@@ -4,7 +4,7 @@
-     <meta charset="UTF-8" />
-     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📷</text></svg>" />
-     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
--    <meta name="theme-color" content="#f4f2ed" />
-+    <meta name="theme-color" content="#161c22" />
-     <meta name="robots" content="noindex" />
-     <title>2026 교(원)감 AI·디지털 직무연수 안내</title>
-     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
 diff --git a/src/training/TrainingSite.jsx b/src/training/TrainingSite.jsx
-index 691b484..d20dd00 100644
+index 691b484..9428464 100644
 --- a/src/training/TrainingSite.jsx
 +++ b/src/training/TrainingSite.jsx
-@@ -3,56 +3,38 @@ import { meta, nav } from './content';
- import { useHashRoute, navigate } from './useHashRoute';
- import { Home, Schedule, Course, Guide, Materials, Participate } from './pages';
+@@ -1,81 +1,188 @@
+-import { Home as HomeIcon, CalendarDays, Map, BookOpen, CheckCircle2 } from 'lucide-react';
+-import { meta, nav } from './content';
+-import { useHashRoute, navigate } from './useHashRoute';
+-import { Home, Schedule, Course, Guide, Materials, Participate } from './pages';
++import { useState } from 'react';
++import { ChevronDown, MapPin, Coffee, ExternalLink } from 'lucide-react';
++import { meta, schedule, guides, materials, participate } from './content';
++import { Photo, LinkButton } from './ui';
  
 -const icons = {
 -  home: HomeIcon,
@@ -25,11 +18,23 @@ index 691b484..d20dd00 100644
 -  course: Map,
 -  materials: BookOpen,
 -  participate: CheckCircle2,
--};
-+const icons = { home: HomeIcon, schedule: CalendarDays, course: Map, materials: BookOpen, participate: CheckCircle2 };
++// ── C안 : 시간축 하나 ─────────────────────────────────────
++// 화면이 하나뿐입니다. 연수 전체가 시간 순서로 한 줄에 걸립니다.
++// 장소 소개도, 자료도, 신청 폼도 각자 자기 시각에 매달려 그 자리에서 펼쳐집니다.
++// 연수 당일 "지금 뭐 하지"에 바로 답합니다. 대신 훑어보기는 불리합니다.
++
++// 어떤 시각에 무엇이 딸리는지. day 번호와 행 번호로 답니다.
++const detailAt = {
++  '0-0': { kind: 'material', key: 'lecture1' },
++  '1-2': { kind: 'guide', key: 'jeoksangsan' },
++  '1-3': { kind: 'guide', key: 'yaksok' },
++  '1-5': { kind: 'guide', key: 'lunch' },
++  '1-7': { kind: 'guide', key: 'taekwondowon' },
++  '1-9': { kind: 'survey' },
+ };
  
- function Screen({ page, param }) {
-   switch (page) {
+-function Screen({ page, param }) {
+-  switch (page) {
 -    case 'schedule':
 -      return <Schedule />;
 -    case 'course':
@@ -42,19 +47,125 @@ index 691b484..d20dd00 100644
 -      return <Participate />;
 -    default:
 -      return <Home />;
-+    case 'schedule': return <Schedule />;
-+    case 'course': return <Course />;
-+    case 'guide': return <Guide id={param} />;
-+    case 'materials': return <Materials />;
-+    case 'participate': return <Participate />;
-+    default: return <Home />;
++function GuideBody({ g }) {
++  return (
++    <>
++      <ul className="list-disc pl-5 space-y-2 text-[17px] leading-relaxed text-ink">
++        {g.summary.map((x, i) => (
++          <li key={i}>{typeof x === 'string' ? x : x.text}</li>
++        ))}
++      </ul>
++      {g.photos?.length > 0 && (
++        <div className="grid grid-cols-2 gap-3 mt-4">
++          {g.photos.map((p, i) => (
++            <div key={i} className="aspect-[4/3] overflow-hidden rounded-box border border-line">
++              <Photo src={p} alt="" />
++            </div>
++          ))}
++        </div>
++      )}
++      {g.links?.length > 0 && (
++        <div className="mt-4 flex flex-col gap-3">
++          {g.links.map((l) => (
++            <LinkButton key={l.url} href={l.url}>
++              {l.label}
++            </LinkButton>
++          ))}
++        </div>
++      )}
++    </>
++  );
++}
++
++function Detail({ spec }) {
++  if (spec.kind === 'guide') return <GuideBody g={guides[spec.key]} />;
++  if (spec.kind === 'material') {
++    const m = materials.items.find((x) => x.id === spec.key);
++    if (!m) return null;
++    return (
++      <>
++        <ul className="list-disc pl-5 space-y-2 text-[17px] leading-relaxed text-ink">
++          {m.summary.map((x, i) => (
++            <li key={i}>{x}</li>
++          ))}
++        </ul>
++        {m.url && (
++          <div className="mt-4">
++            <LinkButton href={m.url}>{m.urlLabel || '열기'}</LinkButton>
++          </div>
++        )}
++      </>
++    );
    }
++  const { survey } = participate;
++  return (
++    <>
++      <div className="space-y-2 text-[17px] leading-relaxed text-ink">
++        {survey.message.map((m, i) => (
++          <p key={i} className={i === 0 ? 'font-bold' : ''}>
++            {m}
++          </p>
++        ))}
++      </div>
++      <div className="mt-4">
++        <LinkButton href={survey.url}>{survey.buttonLabel}</LinkButton>
++      </div>
++    </>
++  );
++}
++
++function Row({ row, spec }) {
++  const [open, setOpen] = useState(false);
++  const [time, dur, body, place] = row;
++  const lines = Array.isArray(body) ? body : [body];
++
++  return (
++    <li className="relative pl-8 pb-6">
++      {/* 시간축 */}
++      <span className="absolute left-[9px] top-2 bottom-0 w-[2px] bg-line" aria-hidden="true" />
++      <span className="absolute left-0 top-1.5 w-5 h-5 rounded-full border-[3px] border-accent bg-paper" aria-hidden="true" />
++
++      <p className="text-[16px] font-bold text-accent leading-tight">
++        {time} {dur && <span className="font-normal text-muted">· {dur}</span>}
++      </p>
++      <div className="mt-1 text-[17px] leading-relaxed text-ink">
++        {lines.map((l, i) => (
++          <p key={i}>{l}</p>
++        ))}
++      </div>
++      {place && (
++        <p className="mt-1 flex items-start gap-1 text-[15px] text-muted">
++          <MapPin size={16} className="mt-1 shrink-0" aria-hidden="true" /> {place}
++        </p>
++      )}
++
++      {spec && (
++        <>
++          <button
++            type="button"
++            onClick={() => setOpen((v) => !v)}
++            aria-expanded={open}
++            className="mt-3 inline-flex items-center gap-2 min-h-[48px] rounded-box border-2 border-accent px-4 text-[16px] font-bold text-accent"
++          >
++            {open ? '접기' : '자세히 보기'}
++            <ChevronDown size={20} className={open ? 'rotate-180 transition' : 'transition'} aria-hidden="true" />
++          </button>
++          {open && (
++            <div className="mt-3 rounded-box border border-line bg-card p-4">
++              <Detail spec={spec} />
++            </div>
++          )}
++        </>
++      )}
++    </li>
++  );
  }
  
  export default function TrainingSite() {
-   const { page, param } = useHashRoute();
+-  const { page, param } = useHashRoute();
 -  // 장소 소개 화면은 코스 메뉴를 켜 둡니다.
-   const active = page === 'guide' ? 'course' : page;
+-  const active = page === 'guide' ? 'course' : page;
++  const { coffee } = participate;
  
    return (
 -    <div className="min-h-dvh bg-stone-300 text-ink">
@@ -69,34 +180,84 @@ index 691b484..d20dd00 100644
 -          )}
 +        <header className="px-4 pt-4 pb-3 border-b border-line">
 +          <p className="text-[15px] font-bold text-accent">{meta.org}</p>
-+          {page !== 'home' && <p className="text-[15px] text-muted mt-0.5">{meta.year} {meta.title}</p>}
++          <h1 className="mt-1 text-[20px] font-bold leading-snug text-ink">
++            {meta.year} {meta.title}
++          </h1>
          </header>
  
-         <main className="flex-1 px-4 pb-32 pt-5">
-           <Screen page={page} param={param} />
-         </main>
+-        <main className="flex-1 px-4 pb-32 pt-5">
+-          <Screen page={page} param={param} />
+-        </main>
++        <main className="flex-1 px-4 pt-5 pb-16">
++          {/* 시각에 매달 수 없는 것 하나. 마감이 있어 맨 위에 고정합니다. */}
++          <div className="rounded-box border-2 border-accent bg-card p-4">
++            <h2 className="flex items-center gap-2 text-[18px] font-bold text-accent">
++              <Coffee size={20} aria-hidden="true" /> {coffee.label}
++            </h2>
++            <p className="mt-1 text-[16px] font-bold text-warn">{coffee.when}</p>
++            <a
++              href={coffee.url}
++              target="_blank"
++              rel="noopener noreferrer"
++              className="mt-3 flex w-full items-center justify-center gap-2 min-h-[56px] rounded-box bg-accent text-onAccent text-[18px] font-bold"
++            >
++              {coffee.buttonLabel} <ExternalLink size={19} aria-hidden="true" />
++            </a>
++          </div>
++
++          {schedule.days.map((day, di) => (
++            <section key={day.label} className="mt-8">
++              <h2 className="mb-4 text-[19px] font-bold text-ink border-l-[6px] border-accent pl-3">{day.label}</h2>
++              <ol>
++                {day.rows.map((row, ri) => (
++                  <Row key={ri} row={row} spec={detailAt[`${di}-${ri}`]} />
++                ))}
++              </ol>
++            </section>
++          ))}
  
 -        {/* 하단 메뉴. 한글 이름을 크게 보여 주고 그림은 거들기만 합니다. */}
-         <nav
-           aria-label="주요 메뉴"
+-        <nav
+-          aria-label="주요 메뉴"
 -          className="fixed bottom-0 inset-x-0 mx-auto max-w-md bg-white border-t-2 border-navy-800"
-+          className="fixed bottom-0 inset-x-0 mx-auto max-w-md bg-card border-t-2 border-accent"
-         >
-           <ul className="grid grid-cols-5 gap-1 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
-             {nav.map((n) => {
-@@ -64,8 +46,8 @@ export default function TrainingSite() {
-                     type="button"
-                     onClick={() => navigate(n.id)}
-                     aria-current={on ? 'page' : undefined}
+-        >
+-          <ul className="grid grid-cols-5 gap-1 p-2 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
+-            {nav.map((n) => {
+-              const Icon = icons[n.id];
+-              const on = active === n.id;
+-              return (
+-                <li key={n.id}>
+-                  <button
+-                    type="button"
+-                    onClick={() => navigate(n.id)}
+-                    aria-current={on ? 'page' : undefined}
 -                    className={`w-full min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-lg px-1 py-2 ${
 -                      on ? 'bg-navy-800 text-white' : 'text-navy-800'
-+                    className={`w-full min-h-[60px] flex flex-col items-center justify-center gap-1 rounded-box px-1 py-2 ${
-+                      on ? 'bg-accent text-onAccent' : 'text-accent'
-                     }`}
-                   >
-                     <Icon size={21} strokeWidth={on ? 2.4 : 2} aria-hidden="true" />
+-                    }`}
+-                  >
+-                    <Icon size={21} strokeWidth={on ? 2.4 : 2} aria-hidden="true" />
+-                    <span className="text-[15px] font-bold whitespace-nowrap leading-none">{n.label}</span>
+-                  </button>
+-                </li>
+-              );
+-            })}
+-          </ul>
+-        </nav>
++          <p className="mt-6 text-[15px] text-muted">{schedule.note}</p>
++
++          <p className="mt-8 pt-6 border-t border-line text-center text-[16px] text-muted">
++            {meta.dept} {meta.contact.role} {meta.contact.name}
++            <br />
++            <a href={`tel:${meta.contact.phone}`} className="inline-block mt-2 font-bold text-accent underline">
++              {meta.contact.phone}
++            </a>
++          </p>
++        </main>
+       </div>
+     </div>
+   );
 diff --git a/src/training/pages.jsx b/src/training/pages.jsx
-index df580ef..9b268bf 100644
+index df580ef..7f4c94a 100644
 --- a/src/training/pages.jsx
 +++ b/src/training/pages.jsx
 @@ -1,16 +1,4 @@
@@ -117,7 +278,7 @@ index df580ef..9b268bf 100644
  import { meta, home, schedule, course, guides, materials, participate } from './content';
  import { navigate } from './useHashRoute';
  import { Photo, Polaroid, PageTitle, Card, BackButton, LinkButton } from './ui';
-@@ -20,7 +8,7 @@ export function Home() {
+@@ -20,30 +8,30 @@ export function Home() {
    return (
      <div>
        <div className="text-center">
@@ -126,7 +287,10 @@ index df580ef..9b268bf 100644
            {meta.year} {meta.audience}
          </p>
          <h1 className="mt-2 text-[26px] font-bold leading-snug text-ink">{meta.title}</h1>
-@@ -30,7 +18,7 @@ export function Home() {
+       </div>
+ 
+-      <ul className="mt-6 space-y-3">
++      <ul className="mt-7 space-y-4">
          {meta.summary.map((s, i) => (
            <li
              key={i}
@@ -135,7 +299,14 @@ index df580ef..9b268bf 100644
            >
              {s}
            </li>
-@@ -43,7 +31,7 @@ export function Home() {
+         ))}
+       </ul>
+ 
+-      <div className="grid grid-cols-2 gap-3 mt-6">
+-        {home.photos.map((p, i) => (
++      <div className="grid grid-cols-1 gap-5 mt-8">
++        {home.photos.slice(0, 2).map((p, i) => (
+           <Polaroid key={i} src={p} alt="" />
          ))}
        </div>
  
@@ -453,12 +624,12 @@ index da4d319..44860c5 100644
        {children} <ExternalLink size={19} aria-hidden="true" />
      </a>
 diff --git a/tailwind.config.js b/tailwind.config.js
-index c3ed38c..374c787 100644
+index c3ed38c..5abf25a 100644
 --- a/tailwind.config.js
 +++ b/tailwind.config.js
-@@ -1,27 +1,23 @@
+@@ -1,27 +1,16 @@
  /** @type {import('tailwindcss').Config} */
-+// B안 야간 화면
++// 세 시안이 공유하는 중립 팔레트. 색은 구조 결정 뒤에 따로 정합니다.
  export default {
 -  content: [
 -    "./index.html",
@@ -482,19 +653,12 @@ index c3ed38c..374c787 100644
 -          800: '#1d3552',
 -          900: '#16283f',
 -        },
-+        edge: '#0f1318',
-+        paper: '#161c22',
-+        card: '#1f272f',
-+        ink: '#eef2f5',
-+        muted: '#aab6c0',
-+        line: '#35414c',
-+        accent: '#f5c04a',
-+        onAccent: '#1a1208',
-+        soft: '#253039',
-+        onSoft: '#e7edf2',
-+        warn: '#ff9f9f',
++        edge: '#d6d3d1', paper: '#f4f2ed', card: '#ffffff',
++        ink: '#1c1917', muted: '#44403c', line: '#d6d3d1',
++        accent: '#1d3552', onAccent: '#ffffff',
++        soft: '#eef2f7', onSoft: '#16283f', warn: '#9f1239',
        },
-+      borderRadius: { box: '16px', pill: '9999px' },
++      borderRadius: { box: '10px', pill: '10px' },
      },
    },
    plugins: [],
