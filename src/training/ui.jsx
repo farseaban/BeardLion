@@ -59,13 +59,30 @@ export function BackButton({ to = 'home', param, label = '되돌아가기' }) {
   );
 }
 
+// 아직 주소를 받지 못한 자리표시 링크인지 봅니다.
+// content.js에 example.com 주소가 남아 있으면 참가자에게 빈 쪽이 열립니다.
+// 그래서 누를 수 없는 '준비 중' 단추로 바꿔 둡니다. 실제 주소를 넣으면 저절로 살아납니다.
+function isPlaceholderUrl(href) {
+  return !href || href.includes('example.com');
+}
+
 export function LinkButton({ href, children, className = '' }) {
+  const base = `flex w-full items-center justify-center gap-2 min-h-[56px] rounded-pill px-5 py-3 text-[18px] font-bold ${className}`;
+
+  if (isPlaceholderUrl(href)) {
+    return (
+      <p className={`${base} border-2 border-dashed border-line bg-soft text-muted`}>
+        {children} · 준비 중
+      </p>
+    );
+  }
+
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className={`flex w-full items-center justify-center gap-2 min-h-[56px] rounded-pill bg-accent px-5 py-3 text-[18px] font-bold text-onAccent ${className}`}
+      className={`${base} bg-accent text-onAccent`}
     >
       {children} <ExternalLink size={19} aria-hidden="true" />
     </a>

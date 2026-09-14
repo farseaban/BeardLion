@@ -8,6 +8,9 @@
 // 표기 규칙
 //   - 「TODO」가 붙은 값은 실제 정보로 교체해야 합니다.
 //   - 링크(url)는 반드시 https:// 로 시작해야 합니다.
+//   - example.com 주소는 아직 받지 못한 자리표시입니다.
+//     화면에는 누를 수 없는 '준비 중' 단추로 나옵니다.
+//     실제 주소로 바꾸면 저절로 눌리는 단추가 됩니다.
 //   - 사진(photo)은 public/photos/ 폴더에 넣고 파일명만 적습니다.
 //     사진이 없으면 비워 두면 자리표시 그림이 나옵니다.
 // ─────────────────────────────────────────────────────────────
@@ -134,7 +137,7 @@ export const guides = {
     ],
     quotes: [],
     photos: ['images1.jpg', 'images2.jpg'],
-    links: [{ label: '희망 음료 신청하기', url: 'https://example.com/coffee' }], // TODO 구글폼 주소
+    links: [{ label: '희망 음료 신청하기', url: 'https://example.com/TODO-coffee-form' }], // TODO 구글폼 주소로 교체
   },
   lunch: {
     title: '점심식사',
@@ -206,7 +209,7 @@ export const participate = {
       '보다 나은 연수 운영을 위해 아래 링크를 통해 만족도 설문에 응답해 주시기 바랍니다.',
     ],
     buttonLabel: '만족도 조사 참여',
-    url: 'https://example.com/survey', // TODO 구글폼 주소
+    url: 'https://example.com/TODO-survey-form', // TODO 만족도 구글폼 주소로 교체
   },
   coffee: {
     label: '약속정원 희망 음료 신청',
@@ -217,7 +220,7 @@ export const participate = {
       '마감 후에는 변경이 어렵습니다.',
     ],
     buttonLabel: '희망 음료 신청',
-    url: 'https://example.com/coffee', // TODO 구글폼 주소
+    url: 'https://example.com/TODO-coffee-form', // TODO 음료 신청 구글폼 주소로 교체
     drinks: [
       '아이스아메리카노',
       '핫아메리카노',
