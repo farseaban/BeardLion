@@ -1,4 +1,4 @@
-import { ChevronRight, ChevronDown, MapPin, Flag, Phone, FileText, ExternalLink, Coffee, ClipboardCheck } from 'lucide-react';
+import { ChevronRight, ChevronDown, MapPin, Flag, Phone, FileText, Coffee, ClipboardCheck } from 'lucide-react';
 import { meta, home, schedule, course, guides, materials, participate } from './content';
 import { Photo, Polaroid, PageTitle, Card, BackButton, LinkButton } from './ui';
 
@@ -318,16 +318,6 @@ export function Participate() {
               </li>
             ))}
           </ul>
-          {coffee.tallyUrl && (
-            <a
-              href={coffee.tallyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 inline-flex items-center gap-2 min-h-[48px] text-[16px] font-bold text-accent underline"
-            >
-              담당 장학사용 집계표 <ExternalLink size={17} aria-hidden="true" />
-            </a>
-          )}
         </div>
       </Card>
 

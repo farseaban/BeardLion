@@ -57,12 +57,20 @@ A안을 적용하면서 두 가지를 바꿨습니다.
 ## B안·C안으로 되돌리려면
 
 ```
-git apply -R docs/ui-시안-A-한장스크롤.patch
+git checkout a27959f -- src/training/ tailwind.config.js
 git apply docs/ui-시안-B-큰타일허브.patch      # 또는 C
 npm run lint && npm run build
 ```
 
-위 두 가지 수정은 A안 전용이라 되돌릴 때 함께 빠집니다.
+`a27959f`는 A안을 적용하기 직전 커밋입니다. 세 안의 공통 출발점입니다.
+
+**`git apply -R`로는 되돌아가지 않습니다.** A안 패치를 거꾸로 적용하면
+`patch does not apply`가 납니다. A안을 커밋한 뒤 `ui.jsx`와 `pages.jsx`를
+더 고쳤기 때문입니다. 위의 `git checkout`이 확인된 경로입니다.
+(2026. 9. 14. 실제로 확인했습니다.)
+
+되돌리면 A안 전용 수정 두 가지(하단 고정 바로가기, 아래쪽 화살표)와
+그 뒤의 수정들(준비 중 단추 등)도 함께 빠집니다.
 
 문구·일정·링크가 담긴 `src/training/content.js`는 패치가 건드리지 않습니다.
 어느 안을 골라도 내용은 그대로입니다.
