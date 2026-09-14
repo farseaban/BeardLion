@@ -1,4 +1,25 @@
-import { ChevronRight, ChevronDown, MapPin, Flag, Phone, FileText, Coffee, ClipboardCheck } from 'lucide-react';
+import {
+  ChevronRight, ChevronDown, MapPin, Flag, Phone, FileText, Coffee, ClipboardCheck,
+  Mountain, Flower2, Trees, UtensilsCrossed, Landmark, Medal,
+} from 'lucide-react';
+
+// 코스 줄 아이콘. content.js에는 이름만 적고 그림은 여기서 고릅니다.
+// 모르는 이름이 오면 pin으로 그립니다. 화면이 비거나 깨지지 않게 하려는 것입니다.
+const STOP_ICONS = {
+  mountain: Mountain,
+  flower: Flower2,
+  trees: Trees,
+  utensils: UtensilsCrossed,
+  landmark: Landmark,
+  medal: Medal,
+  clipboard: ClipboardCheck,
+  pin: MapPin,
+};
+
+function StopIcon({ name }) {
+  const Icon = STOP_ICONS[name] || MapPin;
+  return <Icon size={26} aria-hidden="true" />;
+}
 import { meta, home, schedule, course, guides, materials, participate } from './content';
 import { Photo, Polaroid, PageTitle, Card, BackButton, LinkButton } from './ui';
 
@@ -127,8 +148,8 @@ export function Course() {
               <span className="grid place-items-center w-9 h-9 shrink-0 rounded-full bg-accent text-onAccent text-[16px] font-bold">
                 {s.n}
               </span>
-              <span className="w-20 h-16 shrink-0 overflow-hidden rounded-box border border-line">
-                <Photo src={s.photo} alt="" />
+              <span className="grid place-items-center w-14 h-14 shrink-0 rounded-box bg-soft border border-line text-accent">
+                <StopIcon name={s.icon} />
               </span>
               <span className="flex-1 text-left">
                 <span className="block text-[18px] font-bold text-ink leading-snug">{s.label}</span>

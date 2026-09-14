@@ -11,6 +11,10 @@
 //   - example.com 주소는 아직 받지 못한 자리표시입니다.
 //     화면에는 누를 수 없는 '준비 중' 단추로 나옵니다.
 //     실제 주소로 바꾸면 저절로 눌리는 단추가 됩니다.
+//   - 코스 줄의 아이콘(icon)은 이름만 적습니다. 쓸 수 있는 이름:
+//     mountain 산 · flower 정원 · trees 숲 · utensils 식사 ·
+//     landmark 건물 · medal 시상 · clipboard 설문 · pin 그 밖
+//     모르는 이름을 적으면 pin으로 나옵니다.
 //   - 사진(photo)은 public/photos/ 폴더에 넣고 파일명만 적습니다.
 //     사진이 없으면 비워 두면 자리표시 그림이 나옵니다.
 // ─────────────────────────────────────────────────────────────
@@ -106,11 +110,11 @@ export const course = {
   start: '대전교육과학연구원 출발 08:10',
   end: '대전교육과학연구원 도착 16:50',
   stops: [
-    { n: 1, label: '적상산', time: '10:00', type: 'guide', target: 'jeoksangsan', photo: 'images4.jpg' },
-    { n: 2, label: '약속정원', time: '10:00', type: 'guide', target: 'yaksok', photo: 'images1.jpg' },
-    { n: 3, label: '점심식사', time: '12:20', type: 'guide', target: 'lunch', photo: 'images2.jpg' },
-    { n: 4, label: '무주태권도원', time: '13:30', type: 'guide', target: 'taekwondowon', photo: 'image3.jpg' },
-    { n: 5, label: '만족도 조사', time: '16:50', type: 'page', target: 'participate', photo: 'images2.jpg' },
+    { n: 1, label: '적상산', time: '10:00', type: 'guide', target: 'jeoksangsan', icon: 'mountain' },
+    { n: 2, label: '약속정원', time: '10:00', type: 'guide', target: 'yaksok', icon: 'flower' },
+    { n: 3, label: '점심식사', time: '12:20', type: 'guide', target: 'lunch', icon: 'utensils' },
+    { n: 4, label: '무주태권도원', time: '13:30', type: 'guide', target: 'taekwondowon', icon: 'landmark' },
+    { n: 5, label: '만족도 조사', time: '16:50', type: 'page', target: 'participate', icon: 'clipboard' },
   ],
 };
 
