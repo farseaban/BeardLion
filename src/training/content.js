@@ -35,7 +35,7 @@ export const meta = {
 
 // 첫 화면 사진. public/photos/ 안의 파일명을 적습니다. 4장이 보기 좋습니다.
 export const home = {
-  photos: ['images4.jpg', 'images1.jpg', 'image3.jpg', 'images2.jpg'],
+  photos: ['적상산1.jpg', '적상산2.jpg', '약속정원1.jpg', '무주태권도원2.jpg'],
 };
 
 // 하단 고정 메뉴. 순서와 이름만 바꿀 수 있습니다. id는 고정입니다.
@@ -128,7 +128,7 @@ export const guides = {
       'TODO: 적상산 소개 문구를 넣습니다. (위치, 특징, 관람 안내 등)',
     ],
     quotes: [],
-    photos: ['images4.jpg', 'image3.jpg'],
+    photos: ['적상산2.jpg', '적상산1.jpg'],
   },
   yaksok: {
     title: '약속정원',
@@ -140,7 +140,7 @@ export const guides = {
       'TODO: 약속정원 소개 문구를 넣습니다.',
     ],
     quotes: [],
-    photos: ['images1.jpg', 'images2.jpg'],
+    photos: ['약속정원1.jpg', '약속정원2.jpg'],
     links: [{ label: '희망 음료 신청하기', url: 'https://example.com/TODO-coffee-form' }], // TODO 구글폼 주소로 교체
   },
   lunch: {
@@ -161,7 +161,7 @@ export const guides = {
       'TODO: 태권도원 소개 문구와 관람 동선을 넣습니다.',
     ],
     quotes: [],
-    photos: ['image3.jpg', 'images2.jpg'],
+    photos: ['무주태권도원2.jpg'],
   },
 };
 
