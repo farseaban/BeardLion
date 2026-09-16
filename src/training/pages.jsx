@@ -337,7 +337,7 @@ export function Participate() {
             {coffee.buses.map((b) => (
               <li key={b.bus} className="rounded-box bg-soft border border-line px-3 py-2.5 text-[16px]">
                 <span className="font-bold text-onSoft">{b.bus}</span>
-                <span className="ml-2 text-ink">{b.staff}</span>
+                <span className="block mt-0.5 text-ink">{b.staff}</span>
               </li>
             ))}
           </ul>
