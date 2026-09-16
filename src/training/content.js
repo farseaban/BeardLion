@@ -210,11 +210,11 @@ export const participate = {
   },
   coffee: {
     label: '약속정원 희망 음료 신청',
-    when: '신청 마감: 9. 29.(화) 18:00',
+    when: '신청 마감: 9. 29.(화) 09:00까지',
     message: [
       '약속정원 커피차에서 받으실 음료를 미리 신청해 주세요.',
       '호차·소속학교·성명·희망 음료를 입력하시면 됩니다.',
-      '마감 후에는 변경이 어렵습니다.',
+      '마감 후에는 변경이 어려우며 미신청 시 기본 메뉴가 제공됩니다.',
     ],
     buttonLabel: '희망 음료 신청',
     url: 'https://example.com/TODO-coffee-form',
@@ -230,10 +230,10 @@ export const participate = {
     ],
     // 호차별 담당 장학사. 음료 집계와 안전 관리 담당입니다.
     buses: [
-      { bus: '1호차', staff: '윤인아' },
-      { bus: '2호차', staff: '이인혜' },
-      { bus: '3호차', staff: '김규철' },
-      { bus: '4호차', staff: '윤미희' },
+      { bus: '1호차', staff: '정의숙 성은규' },
+      { bus: '2호차', staff: '이인혜 유수옥' },
+      { bus: '3호차', staff: '윤미희 반창모' },
+      { bus: '4호차', staff: '오로라 유지영' },
     ],
   },
 };
