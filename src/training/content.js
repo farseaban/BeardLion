@@ -6,7 +6,6 @@
 // 코드(JSX)는 손대지 않아도 됩니다.
 //
 // 표기 규칙
-//   - 「TODO」가 붙은 값은 실제 정보로 교체해야 합니다.
 //   - 링크(url)는 반드시 https:// 로 시작해야 합니다.
 //   - example.com 주소는 아직 받지 못한 자리표시입니다.
 //     화면에는 누를 수 없는 '준비 중' 단추로 나옵니다.
@@ -125,7 +124,6 @@ export const guides = {
     summary: [
       '일정: 9. 30.(수) 10:00 ~ 11:00',
       '활동: 무주 생태 체험 및 AI·디지털 자료 제작 실습',
-      'TODO: 적상산 소개 문구를 넣습니다. (위치, 특징, 관람 안내 등)',
     ],
     quotes: [],
     photos: ['적상산2.jpg', '적상산1.jpg'],
@@ -137,17 +135,15 @@ export const guides = {
       '활동: 생태 체험 및 실습, 분임토의(분임토의실)',
       '분임토의 주제: 디지털 기반 교육혁신을 위한 교감의 역할과 학교 운영 방안',
       '커피차 운영: 사전 신청한 음료를 이곳에서 받습니다.',
-      'TODO: 약속정원 소개 문구를 넣습니다.',
     ],
     quotes: [],
     photos: ['약속정원1.jpg', '약속정원2.jpg'],
-    links: [{ label: '희망 음료 신청하기', url: 'https://example.com/TODO-coffee-form' }], // TODO 구글폼 주소로 교체
+    links: [{ label: '희망 음료 신청하기', url: 'https://example.com/TODO-coffee-form' }],
   },
   lunch: {
     title: '점심식사',
     summary: [
       '일정: 9. 30.(수) 12:20 ~ 13:10',
-      'TODO: 식당 이름, 주소, 메뉴를 넣습니다.',
     ],
     quotes: [],
     photos: [],
@@ -158,7 +154,6 @@ export const guides = {
       '일정: 9. 30.(수) 13:30 ~ 15:30',
       '활동: 전통문화 및 AI·디지털 활용 프로그램 체험',
       '주요 시설: 태권도박물관, 디지털 체험관 등',
-      'TODO: 태권도원 소개 문구와 관람 동선을 넣습니다.',
     ],
     quotes: [],
     photos: ['무주태권도원2.jpg'],
@@ -175,9 +170,8 @@ export const materials = {
       label: '【특강】 생성형 AI도구 활용 및 콘텐츠 제작 방법 이해',
       meta: '9. 10.(목) 14:30~16:30 · 서부교육지원청 대회의실',
       summary: [
-        'TODO: 특강 내용 요약 3~5줄을 넣습니다.',
       ],
-      url: '', // TODO 원본 자료 링크 (구글드라이브 등). 비우면 버튼이 안 나옵니다.
+      url: '', // 자료 주소를 넣으면 단추가 나옵니다. 비워 두면 안 나옵니다.
       urlLabel: '특강 자료 보기',
     },
     {
@@ -185,7 +179,6 @@ export const materials = {
       label: 'AI·디지털 자료 제작 실습 안내',
       meta: '9. 30.(수) 10:00~11:00 · 적상산, 약속정원',
       summary: [
-        'TODO: 실습 절차와 준비물을 넣습니다.',
       ],
       url: '',
       urlLabel: '실습 안내 보기',
@@ -195,7 +188,7 @@ export const materials = {
       label: '패들렛 과제',
       meta: '실습 결과물 공유',
       summary: ['실습 결과물을 패들렛에 올려 주세요. 분임토의 시간에 함께 봅니다.'],
-      url: 'https://padlet.com/', // TODO 실제 패들렛 주소
+      url: 'https://example.com/TODO-padlet',
       urlLabel: '패들렛 열기',
     },
   ],
@@ -213,18 +206,18 @@ export const participate = {
       '보다 나은 연수 운영을 위해 아래 링크를 통해 만족도 설문에 응답해 주시기 바랍니다.',
     ],
     buttonLabel: '만족도 조사 참여',
-    url: 'https://example.com/TODO-survey-form', // TODO 만족도 구글폼 주소로 교체
+    url: 'https://example.com/TODO-survey-form',
   },
   coffee: {
     label: '약속정원 희망 음료 신청',
-    when: '신청 마감: 9. 29.(화) 18:00', // TODO 마감 시각 확정
+    when: '신청 마감: 9. 29.(화) 18:00',
     message: [
       '약속정원 커피차에서 받으실 음료를 미리 신청해 주세요.',
       '호차·소속학교·성명·희망 음료를 입력하시면 됩니다.',
       '마감 후에는 변경이 어렵습니다.',
     ],
     buttonLabel: '희망 음료 신청',
-    url: 'https://example.com/TODO-coffee-form', // TODO 음료 신청 구글폼 주소로 교체
+    url: 'https://example.com/TODO-coffee-form',
     drinks: [
       '아이스아메리카노',
       '핫아메리카노',

@@ -279,11 +279,13 @@ export function Materials() {
               {m.label}
             </h3>
             {m.meta && <p className="mt-2 text-[15px] text-muted">{m.meta}</p>}
-            <ul className="mt-4 list-disc pl-5 space-y-2 text-[17px] leading-relaxed text-ink">
-              {m.summary.map((s, i) => (
-                <li key={i}>{s}</li>
-              ))}
-            </ul>
+            {m.summary?.length > 0 && (
+              <ul className="mt-4 list-disc pl-5 space-y-2 text-[17px] leading-relaxed text-ink">
+                {m.summary.map((s, i) => (
+                  <li key={i}>{s}</li>
+                ))}
+              </ul>
+            )}
             {m.url && (
               <div className="mt-5">
                 <LinkButton href={m.url}>{m.urlLabel || '열기'}</LinkButton>
