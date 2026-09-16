@@ -45,9 +45,15 @@ export function Home() {
         ))}
       </ul>
 
+      {/* 사진이 홀수 장이면 마지막 한 장을 두 칸 너비로 깔아 빈칸을 없앱니다. */}
       <div className="grid grid-cols-2 gap-3 mt-6">
         {home.photos.map((p, i) => (
-          <Polaroid key={i} src={p} alt="" />
+          <Polaroid
+            key={i}
+            src={p}
+            alt=""
+            className={i === home.photos.length - 1 && home.photos.length % 2 === 1 ? 'col-span-2' : ''}
+          />
         ))}
       </div>
 

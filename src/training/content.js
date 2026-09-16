@@ -34,7 +34,7 @@ export const meta = {
 
 // 첫 화면 사진. public/photos/ 안의 파일명을 적습니다. 4장이 보기 좋습니다.
 export const home = {
-  photos: ['적상산1.jpg', '적상산2.jpg', '약속정원1.jpg', '무주태권도원2.jpg'],
+  photos: ['약속정원1.jpg', '약속정원2.jpg', '무주태권도원2.jpg'],
 };
 
 // 하단 고정 메뉴. 순서와 이름만 바꿀 수 있습니다. id는 고정입니다.
@@ -72,7 +72,7 @@ export const schedule = {
           '10:00 ~ 11:00',
           "60'",
           ['【체험 및 실습】', '무주 생태 체험 및 AI·디지털 자료 제작 실습'],
-          '적상산, 약속정원',
+          '약속정원',
         ],
         [
           '11:00 ~ 12:00',
@@ -109,25 +109,15 @@ export const course = {
   start: '대전교육과학연구원 출발 08:10',
   end: '대전교육과학연구원 도착 16:50',
   stops: [
-    { n: 1, label: '적상산', time: '10:00', type: 'guide', target: 'jeoksangsan', icon: 'mountain' },
-    { n: 2, label: '약속정원', time: '10:00', type: 'guide', target: 'yaksok', icon: 'flower' },
-    { n: 3, label: '점심식사', time: '12:20', type: 'guide', target: 'lunch', icon: 'utensils' },
-    { n: 4, label: '무주태권도원', time: '13:30', type: 'guide', target: 'taekwondowon', icon: 'landmark' },
-    { n: 5, label: '만족도 조사', time: '16:50', type: 'page', target: 'participate', icon: 'clipboard' },
+    { n: 1, label: '약속정원', time: '10:00', type: 'guide', target: 'yaksok', icon: 'flower' },
+    { n: 2, label: '점심식사', time: '12:20', type: 'guide', target: 'lunch', icon: 'utensils' },
+    { n: 3, label: '무주태권도원', time: '13:30', type: 'guide', target: 'taekwondowon', icon: 'landmark' },
+    { n: 4, label: '만족도 조사', time: '16:50', type: 'page', target: 'participate', icon: 'clipboard' },
   ],
 };
 
 // 장소 소개 화면. 한 항목이 화면 하나입니다.
 export const guides = {
-  jeoksangsan: {
-    title: '적상산',
-    summary: [
-      '일정: 9. 30.(수) 10:00 ~ 11:00',
-      '활동: 무주 생태 체험 및 AI·디지털 자료 제작 실습',
-    ],
-    quotes: [],
-    photos: ['적상산2.jpg', '적상산1.jpg'],
-  },
   yaksok: {
     title: '약속정원',
     summary: [
@@ -177,7 +167,7 @@ export const materials = {
     {
       id: 'practice',
       label: 'AI·디지털 자료 제작 실습 안내',
-      meta: '9. 30.(수) 10:00~11:00 · 적상산, 약속정원',
+      meta: '9. 30.(수) 10:00~11:00 · 약속정원',
       summary: [
       ],
       url: '',
