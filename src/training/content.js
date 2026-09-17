@@ -128,7 +128,7 @@ export const guides = {
     ],
     quotes: [],
     photos: ['약속정원1.jpg', '약속정원2.jpg'],
-    links: [{ label: '희망 음료 신청하기', url: 'https://example.com/TODO-coffee-form' }],
+    links: [{ label: '희망 음료 신청하기', url: 'https://forms.gle/uXowUbRUNkK1RCjs6' }],
   },
   lunch: {
     title: '점심식사',
@@ -196,7 +196,7 @@ export const participate = {
       '보다 나은 연수 운영을 위해 아래 링크를 통해 만족도 설문에 응답해 주시기 바랍니다.',
     ],
     buttonLabel: '만족도 조사 참여',
-    url: 'https://example.com/TODO-survey-form',
+    url: 'https://forms.gle/QGcENqaZrKSjR4f8A',
   },
   coffee: {
     label: '약속정원 희망 음료 신청',
@@ -207,7 +207,7 @@ export const participate = {
       '마감 후에는 변경이 어려우며 미신청 시 기본 메뉴가 제공됩니다.',
     ],
     buttonLabel: '희망 음료 신청',
-    url: 'https://example.com/TODO-coffee-form',
+    url: 'https://forms.gle/uXowUbRUNkK1RCjs6',
     drinks: [
       '아이스아메리카노',
       '핫아메리카노',
