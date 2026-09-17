@@ -1,16 +1,46 @@
-# React + Vite
+# 교(원)감 직무연수 모바일 안내 사이트
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+대전서부교육지원청 유·초·특수학교 교(원)감 직무연수 안내용 반응형 웹입니다.
+작년 캔바 모바일 사이트(첫 화면 · 일정 · 첫 날 · 둘째 날 · 만족도 · 문화유산 해설)를
+같은 구조로 옮겼습니다.
 
-Currently, two official plugins are available:
+## 내용 고치기
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+코드를 몰라도 됩니다. `src/training/content.js` 한 파일만 고칩니다.
 
-## React Compiler
+| 고칠 것 | 위치 |
+|---|---|
+| 학년도, 제목, 기관, 담당자, 연수 지역 | `meta` |
+| 첫 화면 사진 | `home.photos` |
+| 일정표 | `schedule.days[].rows` (한 행 = `[시간, 분, 내용, 장소]`) |
+| 첫 날·둘째 날 코스 | `days.day1.stops`, `days.day2.stops` |
+| 문화유산·활동 해설 | `guides` |
+| 만족도 설문 문구와 링크 | `survey` |
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+`TODO`가 붙은 값은 올해 정보로 바꿔야 합니다.
+사진은 `public/photos/` 폴더에 넣고 파일명만 적습니다. 비워 두면 자리표시 그림이 나옵니다.
 
-## Expanding the ESLint configuration
+코스의 각 항목(`stops`)은 세 종류입니다.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- `guide`: 해설 화면으로 이동 (`target`은 `guides`의 키)
+- `link`: 외부 주소로 이동 (특강 자료, 구글드라이브, 기관 누리집)
+- `page`: 사이트 안 다른 화면으로 이동 (예: `survey`)
+
+## 로컬에서 보기
+
+```bash
+npm install
+npm run dev
+```
+
+## 배포 (GitHub Pages)
+
+1. 저장소 설정 → Pages → Source를 **GitHub Actions**로 바꿉니다. (한 번만)
+2. `main` 브랜치에 푸시하면 `.github/workflows/deploy-pages.yml`이 자동으로 빌드·배포합니다.
+3. 주소는 `https://<계정>.github.io/<저장소>/` 입니다. 짧은 주소와 QR을 따로 만들어 공유합니다.
+
+## 참고
+
+- 설문 응답과 자료 파일은 이 사이트가 보관하지 않습니다. 구글폼·네이버폼, 구글드라이브 등 외부 링크를 겁니다.
+- 이 저장소는 공개 저장소입니다. 내부 자료는 저장소에 올리지 말고 링크로 연결합니다.
+- `src/QuantumSlides.jsx`는 이전 실험용 컴포넌트이며 현재 화면에는 쓰이지 않습니다.

@@ -1,8 +1,7 @@
-import QuantumSlides from './QuantumSlides'
-import './App.css'
+import TrainingSite from './training/TrainingSite'
 
 function App() {
-  return <QuantumSlides />
+  return <TrainingSite />
 }
 
 export default App
