@@ -34,7 +34,7 @@ export const meta = {
 
 // 첫 화면 사진. public/photos/ 안의 파일명을 적습니다. 4장이 보기 좋습니다.
 export const home = {
-  photos: ['약속정원1.jpg', '약속정원2.jpg', '무주태권도원2.jpg'],
+  photos: ['약속정원1.jpg', '약속정원2.jpg', '무주태권도원2.jpg', '적상산1.jpg'],
 };
 
 // 하단 고정 메뉴. 순서와 이름만 바꿀 수 있습니다. id는 고정입니다.
