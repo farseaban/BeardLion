@@ -178,7 +178,7 @@ export const materials = {
       label: '패들렛 과제',
       meta: '실습 결과물 공유',
       summary: ['실습 결과물을 패들렛에 올려 주세요. 분임토의 시간에 함께 봅니다.'],
-      url: 'https://example.com/TODO-padlet',
+      url: 'https://padlet.com/banchangmo/261017',
       urlLabel: '패들렛 열기',
     },
   ],
